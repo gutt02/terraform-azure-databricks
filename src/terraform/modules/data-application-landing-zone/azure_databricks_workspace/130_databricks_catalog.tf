@@ -28,9 +28,9 @@ resource "azurerm_storage_account" "this" {
   account_replication_type = "GRS"
   is_hns_enabled           = true
 
-  # network_rules {
-  #   default_action = "Deny"
-  # }
+  network_rules {
+    default_action = "Deny"
+  }
 
   identity {
     type = "SystemAssigned"
@@ -42,7 +42,7 @@ resource "azurerm_storage_account" "this" {
 resource "azurerm_private_endpoint" "blob" {
   name                = azurecaf_name.private_endpoint_blob.result
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.this.name
+  resource_group_name = azurerm_resource_group.this.name
   subnet_id           = data.azurerm_subnet.private_endpoints.id
 
   private_dns_zone_group {
@@ -61,7 +61,7 @@ resource "azurerm_private_endpoint" "blob" {
 resource "azurerm_private_endpoint" "dfs" {
   name                = azurecaf_name.private_endpoint_dfs.result
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.this.name
+  resource_group_name = azurerm_resource_group.this.name
   subnet_id           = data.azurerm_subnet.private_endpoints.id
 
   private_dns_zone_group {
@@ -84,22 +84,22 @@ resource "azurerm_role_assignment" "service_principal" {
   principal_id         = data.azurerm_client_config.client_config.object_id
 }
 
-# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container
-resource "azurerm_storage_container" "this" {
-  name                  = "custom-catalog"
-  storage_account_name  = azurerm_storage_account.this.name
-  container_access_type = "private"
+# # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container
+# resource "azurerm_storage_container" "this" {
+#   name                  = "custom-catalog"
+#   storage_account_name  = azurerm_storage_account.this.name
+#   container_access_type = "private"
 
-  depends_on = [
-    azurerm_private_endpoint.blob,
-    azurerm_private_endpoint.dfs,
-    azurerm_role_assignment.service_principal
-  ]
-}
+#   depends_on = [
+#     azurerm_private_endpoint.blob,
+#     azurerm_private_endpoint.dfs,
+#     azurerm_role_assignment.service_principal
+#   ]
+# }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_data_lake_gen2_filesystem
 resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
-  name               = "unity-catalog"
+  name               = "custom-catalog"
   storage_account_id = azurerm_storage_account.this.id
 
   depends_on = [
@@ -128,56 +128,56 @@ resource "azurerm_role_assignment" "this" {
 }
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/storage_credential
-resource "databricks_storage_credential" "this" {
-  name = "${azurerm_storage_account.this.name}-sc"
+# resource "databricks_storage_credential" "this" {
+#   name = "${azurerm_storage_account.this.name}-sc"
 
-  azure_managed_identity {
-    access_connector_id = azurerm_databricks_access_connector.this.id
-  }
+#   azure_managed_identity {
+#     access_connector_id = azurerm_databricks_access_connector.this.id
+#   }
 
-  depends_on = [
-    databricks_metastore_assignment.this
-  ]
-}
+#   depends_on = [
+#     databricks_metastore_assignment.this
+#   ]
+# }
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/external_location
-resource "databricks_external_location" "this" {
-  name = "${azurerm_storage_account.this.name}-el"
-  url = format("abfss://%s@%s.dfs.core.windows.net",
-    azurerm_storage_data_lake_gen2_filesystem.this.name,
-  azurerm_storage_account.this.name)
-  credential_name = databricks_storage_credential.this.id
+# resource "databricks_external_location" "this" {
+#   name = "${azurerm_storage_account.this.name}-el"
+#   url = format("abfss://%s@%s.dfs.core.windows.net",
+#     azurerm_storage_data_lake_gen2_filesystem.this.name,
+#   azurerm_storage_account.this.name)
+#   credential_name = databricks_storage_credential.this.id
 
-  depends_on = [
-    azurerm_role_assignment.this
-  ]
-}
+#   depends_on = [
+#     azurerm_role_assignment.this
+#   ]
+# }
 
-# https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/catalog
-resource "databricks_catalog" "this" {
-  name         = "custom_catalog"
-  metastore_id = var.databricks_metastore_id
-  owner        = data.azurerm_client_config.client_config.client_id
-  storage_root = format("abfss://%s@%s.dfs.core.windows.net",
-    azurerm_storage_container.this.name,
-  azurerm_storage_account.this.name)
-  force_destroy = true
+# # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/catalog
+# resource "databricks_catalog" "this" {
+#   name         = "custom_catalog"
+#   metastore_id = var.databricks_metastore_id
+#   owner        = data.azurerm_client_config.client_config.client_id
+#   storage_root = format("abfss://%s@%s.dfs.core.windows.net",
+#     azurerm_storage_data_lake_gen2_filesystem.this.name,
+#   azurerm_storage_account.this.name)
+#   force_destroy = true
 
-  depends_on = [
-    databricks_external_location.this
-  ]
-}
+#   depends_on = [
+#     databricks_external_location.this
+#   ]
+# }
 
-# https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/schema
-resource "databricks_schema" "this" {
-  name         = "custom_schema"
-  catalog_name = databricks_catalog.this.id
+# # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/schema
+# resource "databricks_schema" "this" {
+#   name         = "custom_schema"
+#   catalog_name = databricks_catalog.this.id
 
-  storage_root = format("abfss://%s@%s.dfs.core.windows.net",
-    azurerm_storage_container.this.name,
-  azurerm_storage_account.this.name)
+#   storage_root = format("abfss://%s@%s.dfs.core.windows.net",
+#     azurerm_storage_data_lake_gen2_filesystem.this.name,
+#   azurerm_storage_account.this.name)
 
-  depends_on = [
-    databricks_catalog.this
-  ]
-}
+#   depends_on = [
+#     databricks_catalog.this
+#   ]
+# }

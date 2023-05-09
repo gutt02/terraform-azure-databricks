@@ -32,4 +32,8 @@ resource "databricks_metastore_assignment" "this" {
   workspace_id         = azurerm_databricks_workspace.this.workspace_id
   metastore_id         = var.databricks_metastore_id
   default_catalog_name = "unity-catalog"
+
+  depends_on = [
+    azurerm_private_endpoint.databricks_ui_api
+  ]
 }
