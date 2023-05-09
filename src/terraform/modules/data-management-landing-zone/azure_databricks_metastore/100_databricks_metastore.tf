@@ -39,9 +39,9 @@ resource "azurerm_storage_account" "this" {
   account_replication_type = "GRS"
   is_hns_enabled           = true
 
-  # network_rules {
-  #   default_action = "Deny"
-  # }
+  network_rules {
+    default_action = "Deny"
+  }
 
   identity {
     type = "SystemAssigned"
