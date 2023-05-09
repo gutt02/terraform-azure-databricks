@@ -1,0 +1,141 @@
+### https://docs.databricks.com/dev-tools/api/latest/index.html
+### https://learn.microsoft.com/en-us/azure/databricks/dev-tools/api/latest/aad/service-prin-aad-token#get-token-azure-cli
+### export CLIENT_ID="********-****-****-****-************"
+### export CLIENT_SECRET="****************************************"
+### export SUBSCRIPTION_ID="********-****-****-****-************"
+### export TENANT_ID="********-****-****-****-************"
+### az login --service-principal --username ${CLIENT_ID} --password ${CLIENT_SECRET} --tenant ${TENANT_ID}
+### az account get-access-token --resource 2ff814a6-3304-4ab8-85cb-cd0e6f879c1d
+@account_id = ********-****-****-****-************
+@databricks_instance = adb-*******************.azuredatabricks.net
+@token = **************************************
+
+### Users
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Users HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Service Principals
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/ServicePrincipals HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Metastores
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/metastores HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+### Databricks account console
+###
+
+### Databricks account console, users
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Users
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Databricks account console, user
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Users/{{id}}
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Databricks account console, service principals
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Databricks account console, service principal
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals/{{id}}
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Databricks account console, service principal (patch)
+PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals/{{id}}
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+  ],
+  "Operations": [
+    {
+      "op": "replace",
+      "path": "roles",
+      "value": [
+        {
+          "value": "account_admin"
+        }
+      ]
+    }
+  ]
+}
+
+### Databricks account console, groups
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Databricks account console, group
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{id}}
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Databricks account console, add group
+POST https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "displayName": "Account admins",
+  "schemas": [
+    "urn:ietf:params:scim:schemas:core:2.0:Group"
+  ],
+  "members": [
+  ]
+}
+
+### Databricks account console, patch group
+PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{id}}
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+  ],
+  "Operations": [
+    {
+      "op": "replace",
+      "path": "roles",
+      "value": [
+        {
+          "value": "account_admin"
+        }
+      ]
+    }
+  ]
+}
+
+### Databrcisk account console, add user
+PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{id}}
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+  ],
+  "Operations": [
+    {
+      "op": "add",
+      "value": {
+        "members": [
+          {
+            "value": "{{id}}"
+          }
+        ]
+      }
+    }
+  ]
+}
