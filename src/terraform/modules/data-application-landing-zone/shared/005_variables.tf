@@ -23,6 +23,16 @@ variable "location" {
   description = "Default Azure region, use Azure CLI notation."
 }
 
+variable "private_dns_zones" {
+  type = map(string)
+
+  default = {
+    dns_zone_azuredatabricks = "privatelink.azuredatabricks.net"
+  }
+
+  description = "Map of private DNS zones."
+}
+
 variable "tags" {
   type = object({
     created_by  = string

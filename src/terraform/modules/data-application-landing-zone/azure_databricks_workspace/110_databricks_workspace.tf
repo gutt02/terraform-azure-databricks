@@ -26,14 +26,3 @@ resource "azurerm_databricks_workspace" "this" {
   public_network_access_enabled         = false
   sku                                   = "premium"
 }
-
-# https://registry.terraform.io/providers/databricks/databricks/0.5.3/docs/resources/metastore_assignment
-resource "databricks_metastore_assignment" "this" {
-  workspace_id         = azurerm_databricks_workspace.this.workspace_id
-  metastore_id         = var.databricks_metastore_id
-  default_catalog_name = "unity-catalog"
-
-  depends_on = [
-    azurerm_private_endpoint.databricks_ui_api
-  ]
-}

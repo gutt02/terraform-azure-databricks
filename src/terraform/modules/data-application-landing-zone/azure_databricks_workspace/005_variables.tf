@@ -9,26 +9,6 @@ variable "connectivity_landing_zone_private_dns_zone_azuredatabricks_id" {
   description = "Id of the private dns zone for Azure Databricks in the connectivity subscription."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_blob_id" {
-  type        = string
-  description = "Id of the private dns zone for BLOBs in the connectivity subscription."
-}
-
-variable "connectivity_landing_zone_private_dns_zone_dfs_id" {
-  type        = string
-  description = "Id of the private dns zone for Data Lake File system in the connectivity subscription."
-}
-
-variable "databricks_account_id" {
-  type        = string
-  description = "The Id of Databricks Account."
-}
-
-variable "databricks_metastore_id" {
-  type        = string
-  description = "The Databricks Metastore Id."
-}
-
 variable "databricks_private_network_security_group_association_id" {
   type        = string
   description = "Id of the databricks private network security association"
@@ -63,6 +43,11 @@ variable "location" {
   description = "Default Azure region, use Azure CLI notation."
 }
 
+variable "private_dns_zone_azuredatabricks_id" {
+  type        = string
+  description = "Id of the private dns zone for Azure Databricks."
+}
+
 variable "private_endpoints_subnet_id" {
   type        = string
   description = "Id of the private endpoints subnet."
@@ -86,35 +71,4 @@ variable "tags" {
   }
 
   description = "Default tags for resources, only applied to resource groups"
-}
-
-variable "virtual_network" {
-  type = object({
-    address_space = string
-
-    subnets = map(object({
-      name          = string
-      address_space = string
-    }))
-  })
-
-  default = {
-    address_space = "192.168.10.0/23"
-    subnets = {
-      private_endpoints = {
-        name          = "private-endpoints"
-        address_space = "192.168.10.0/26"
-      }
-      databricks_public = {
-        name          = "databricks-public"
-        address_space = "192.168.10.64/26"
-      }
-      databricks_private = {
-        name          = "databricks-private"
-        address_space = "192.168.10.128/26"
-      }
-    }
-  }
-
-  description = "VNET destails."
 }

@@ -3,12 +3,12 @@
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/group
 resource "databricks_group" "da_ca" {
   provider     = databricks.azure_account
-  display_name = "Catalog Admins (${azurerm_databricks_workspace.this.name})"
+  display_name = "Catalog Admins (${data.azurerm_databricks_workspace.this.name})"
 }
 
 resource "databricks_group" "da_de" {
   provider     = databricks.azure_account
-  display_name = "Data Engineers (${azurerm_databricks_workspace.this.name})"
+  display_name = "Data Engineers (${data.azurerm_databricks_workspace.this.name})"
 
   depends_on = [
     databricks_metastore_assignment.this
@@ -18,10 +18,18 @@ resource "databricks_group" "da_de" {
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/group
 resource "databricks_group" "ca" {
   display_name = databricks_group.da_ca.display_name
+
+  depends_on = [
+    databricks_metastore_assignment.this
+  ]
 }
 
 resource "databricks_group" "de" {
   display_name = databricks_group.da_de.display_name
+
+  depends_on = [
+    databricks_metastore_assignment.this
+  ]
 }
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/grants

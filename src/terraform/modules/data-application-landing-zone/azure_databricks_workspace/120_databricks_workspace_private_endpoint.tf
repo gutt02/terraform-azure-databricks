@@ -1,8 +1,14 @@
 # https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/resources/azurecaf_name
-resource "azurecaf_name" "private_endpoint_databricks_ui_api" {
+resource "azurecaf_name" "private_endpoint_databricks_ui_api_be" {
   resource_type = "azurerm_private_endpoint"
   prefixes      = var.global_settings.azurecaf_name.prefixes
-  suffixes      = ["databricks", "ui", "api"]
+  suffixes      = ["databricks", "ui", "api", "be"]
+}
+
+resource "azurecaf_name" "private_endpoint_databricks_ui_api_fe" {
+  resource_type = "azurerm_private_endpoint"
+  prefixes      = var.global_settings.azurecaf_name.prefixes
+  suffixes      = ["databricks", "ui", "api", "fe"]
 }
 
 resource "azurecaf_name" "private_endpoint_browser_authentication" {
@@ -14,8 +20,8 @@ resource "azurecaf_name" "private_endpoint_browser_authentication" {
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/guides/azure-private-link-workspace-standard
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint
 # https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource
-resource "azurerm_private_endpoint" "databricks_ui_api" {
-  name                = azurecaf_name.private_endpoint_databricks_ui_api.result
+resource "azurerm_private_endpoint" "databricks_ui_api_be" {
+  name                = azurecaf_name.private_endpoint_databricks_ui_api_be.result
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name
   subnet_id           = data.azurerm_subnet.private_endpoints.id
@@ -26,7 +32,26 @@ resource "azurerm_private_endpoint" "databricks_ui_api" {
   }
 
   private_service_connection {
-    name                           = "${azurecaf_name.private_endpoint_databricks_ui_api.result}-psc"
+    name                           = "${azurecaf_name.private_endpoint_databricks_ui_api_be.result}-psc"
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_databricks_workspace.this.id
+    subresource_names              = ["databricks_ui_api"]
+  }
+}
+
+resource "azurerm_private_endpoint" "databricks_ui_api_fe" {
+  name                = azurecaf_name.private_endpoint_databricks_ui_api_fe.result
+  location            = var.location
+  resource_group_name = azurerm_resource_group.this.name
+  subnet_id           = data.azurerm_subnet.private_endpoints.id
+
+  private_dns_zone_group {
+    name                 = data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.name
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.id]
+  }
+
+  private_service_connection {
+    name                           = "${azurecaf_name.private_endpoint_databricks_ui_api_fe.result}-psc"
     is_manual_connection           = false
     private_connection_resource_id = azurerm_databricks_workspace.this.id
     subresource_names              = ["databricks_ui_api"]
@@ -40,8 +65,8 @@ resource "azurerm_private_endpoint" "browser_authentication" {
   subnet_id           = data.azurerm_subnet.private_endpoints.id
 
   private_dns_zone_group {
-    name                 = data.azurerm_private_dns_zone.databricks.name
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.databricks.id]
+    name                 = data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.name
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.id]
   }
 
   private_service_connection {

@@ -33,13 +33,13 @@ variable "location" {
   description = "Default Azure region, use Azure CLI notation."
 }
 
-variable "private_endpoints_subnet_id" {
-  type        = string
-  description = "Id of the private endpoints subnet."
-}
-
 variable "metastore_name" {
   type        = string
   default     = "metastore-euw"
   description = "Name of the Databricks Metastore."
+}
+
+variable "private_endpoints_subnet_id" {
+  type        = string
+  description = "Id of the private endpoints subnet."
 }

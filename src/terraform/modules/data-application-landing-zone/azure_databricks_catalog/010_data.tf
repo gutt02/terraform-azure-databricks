@@ -27,6 +27,12 @@ data "azurerm_databricks_workspace" "this" {
   resource_group_name = local.resource_group_databricks_workspace_name
 }
 
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/virtual_network
+data "azurerm_virtual_network" "this" {
+  name                = local.virtual_network_name
+  resource_group_name = local.resource_group_network_name
+}
+
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subnet
 data "azurerm_subnet" "this" {
   name                 = local.private_endpoints_subnet_name

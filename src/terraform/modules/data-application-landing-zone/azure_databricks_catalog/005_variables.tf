@@ -4,35 +4,35 @@ variable "client_secret" {
   description = "Client secret of the service principal."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_azuredatabricks_id" {
+variable "connectivity_landing_zone_private_dns_zone_blob_id" {
   type        = string
-  description = "Id of the private dns zone for Azure Databricks in the connectivity subscription."
+  description = "Id of the private dns zone for BLOBs in the connectivity subscription."
 }
 
-variable "databricks_private_network_security_group_association_id" {
+variable "connectivity_landing_zone_private_dns_zone_dfs_id" {
   type        = string
-  description = "Id of the databricks private network security association"
+  description = "Id of the private dns zone for Data Lake File system in the connectivity subscription."
 }
 
-variable "databricks_private_subnet_id" {
+variable "databricks_account_id" {
   type        = string
-  description = "Id of the databricks private subnet."
+  description = "The Id of Databricks Account."
 }
 
-variable "databricks_public_network_security_group_association_id" {
+variable "databricks_metastore_id" {
   type        = string
-  description = "Id of the databricks public network security association"
+  description = "The Databricks Metastore Id."
 }
 
-variable "databricks_public_subnet_id" {
+variable "databricks_resource_id" {
   type        = string
-  description = "Id of the databricks public subnet."
+  description = "The Azure resource Id for the Azure Databricks workspace."
 }
 
 variable "global_settings" {
   default = {
     azurecaf_name = {
-      prefixes = ["azc", "dmlz", "payg"]
+      prefixes = ["azc", "dalz", "payg"]
     }
   }
 }
