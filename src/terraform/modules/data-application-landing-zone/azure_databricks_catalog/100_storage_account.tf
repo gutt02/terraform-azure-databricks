@@ -5,18 +5,6 @@ resource "azurecaf_name" "storage_account" {
   suffixes      = ["cc"]
 }
 
-resource "azurecaf_name" "private_endpoint_blob" {
-  resource_type = "azurerm_private_endpoint"
-  prefixes      = var.global_settings.azurecaf_name.prefixes
-  suffixes      = ["blob"]
-}
-
-resource "azurecaf_name" "private_endpoint_dfs" {
-  resource_type = "azurerm_private_endpoint"
-  prefixes      = var.global_settings.azurecaf_name.prefixes
-  suffixes      = ["dfs"]
-}
-
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
 resource "azurerm_storage_account" "this" {
   name                     = azurecaf_name.storage_account.result
@@ -35,10 +23,25 @@ resource "azurerm_storage_account" "this" {
   }
 }
 
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment
+resource "azurerm_role_assignment" "service_principal" {
+  scope                = azurerm_storage_account.this.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azurerm_client_config.client_config.object_id
+}
+
+resource "azurerm_role_assignment" "databricks_access_connector" {
+  for_each = toset(["Contributor", "Storage Blob Data Contributor"])
+
+  scope                = azurerm_storage_account.this.id
+  role_definition_name = each.key
+  principal_id         = azurerm_databricks_access_connector.this.identity[0].principal_id
+}
+
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint
 # https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource
 resource "azurerm_private_endpoint" "blob" {
-  name                = azurecaf_name.private_endpoint_blob.result
+  name                = "${azurerm_storage_account.this.name}-pe-blob"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.this.name
   subnet_id           = data.azurerm_subnet.this.id
@@ -49,7 +52,7 @@ resource "azurerm_private_endpoint" "blob" {
   }
 
   private_service_connection {
-    name                           = "${azurecaf_name.private_endpoint_blob.result}-psc"
+    name                           = "${azurerm_storage_account.this.name}-pe-blob-psc"
     is_manual_connection           = false
     private_connection_resource_id = azurerm_storage_account.this.id
     subresource_names              = ["blob"]
@@ -57,7 +60,7 @@ resource "azurerm_private_endpoint" "blob" {
 }
 
 resource "azurerm_private_endpoint" "dfs" {
-  name                = azurecaf_name.private_endpoint_dfs.result
+  name                = "${azurerm_storage_account.this.name}-pe-dfs"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.this.name
   subnet_id           = data.azurerm_subnet.this.id
@@ -68,18 +71,11 @@ resource "azurerm_private_endpoint" "dfs" {
   }
 
   private_service_connection {
-    name                           = "${azurecaf_name.private_endpoint_dfs.result}-psc"
+    name                           = "${azurerm_storage_account.this.name}-pe-dfs-psc"
     is_manual_connection           = false
     private_connection_resource_id = azurerm_storage_account.this.id
     subresource_names              = ["dfs"]
   }
-}
-
-# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment
-resource "azurerm_role_assignment" "service_principal" {
-  scope                = azurerm_storage_account.this.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azurerm_client_config.client_config.object_id
 }
 
 # # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container

@@ -9,6 +9,11 @@ variable "connectivity_landing_zone_private_dns_zone_azuredatabricks_id" {
   description = "Id of the private dns zone for Azure Databricks in the connectivity subscription."
 }
 
+variable "databricks_metastore_id" {
+  type        = string
+  description = "The Databricks Metastore Id."
+}
+
 variable "databricks_private_network_security_group_association_id" {
   type        = string
   description = "Id of the databricks private network security association"

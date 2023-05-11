@@ -35,6 +35,15 @@ provider "azurerm" {
 
 provider "azurecaf" {}
 
+provider "databricks" {
+  host                        = azurerm_databricks_workspace.this.workspace_url
+  azure_workspace_resource_id = azurerm_databricks_workspace.this.id
+  azure_client_id             = data.azurerm_client_config.client_config.client_id
+  azure_client_secret         = var.client_secret
+  azure_tenant_id             = data.azurerm_client_config.client_config.tenant_id
+}
+
+
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config
 data "azurerm_client_config" "client_config" {}
 
