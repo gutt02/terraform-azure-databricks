@@ -1,7 +1,7 @@
 variable "global_settings" {
   default = {
     azurecaf_name = {
-      prefixes = ["azc", "clz", "payg"]
+      prefixes = ["az", "cf", "clz"]
     }
   }
 }
@@ -16,24 +16,6 @@ variable "gateway_subnet_id" {
   type        = string
   description = "Id of the Gateway Subnet."
 }
-
-# variable "subnets" {
-#   type = map(object({
-#     address_space       = string
-#     client_address_pool = optional(string)
-#     description         = optional(string)
-#   }))
-
-#   default = {
-#     gateway = {
-#       address_space       = "192.168.100.0/27"
-#       client_address_pool = "192.168.255.0/27"
-#       description         = "GatewaySubnet"
-#     }
-#   }
-
-#   description = "VNET destails."
-# }
 
 variable "virtual_network_gateway" {
   type = object({

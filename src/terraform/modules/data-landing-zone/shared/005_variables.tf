@@ -12,7 +12,7 @@ variable "connectivity_landing_zone_virtual_network_id" {
 variable "global_settings" {
   default = {
     azurecaf_name = {
-      prefixes = ["azc", "dalz", "payg"]
+      prefixes = ["az", "cf", "dlz"]
     }
   }
 }
@@ -43,11 +43,11 @@ variable "tags" {
   })
 
   default = {
-    created_by  = "azc-iac-payg-sp-tf"
+    created_by  = "azc-iac-acf-sp-tf"
     contact     = "contact@me"
-    customer    = "Azure Cloud"
-    environment = "Pay As You Go"
-    project     = "Playground"
+    customer    = "Azure"
+    environment = "Cloud Foundation"
+    project     = "Data Landing Zone"
   }
 
   description = "Default tags for resources, only applied to resource groups"

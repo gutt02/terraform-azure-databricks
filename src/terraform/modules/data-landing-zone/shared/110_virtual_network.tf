@@ -25,16 +25,16 @@ resource "azurecaf_name" "databricks_private" {
   resource_types = ["azurerm_network_security_group"]
 }
 
-resource "azurecaf_name" "dalz_to_clz" {
+resource "azurecaf_name" "dlz_to_clz" {
   resource_type = "azurerm_virtual_network_peering"
   prefixes      = var.global_settings.azurecaf_name.prefixes
   suffixes      = ["clz"]
 }
 
-resource "azurecaf_name" "clz_to_dalz" {
+resource "azurecaf_name" "clz_to_dlz" {
   resource_type = "azurerm_virtual_network_peering"
   prefixes      = var.global_settings.azurecaf_name.prefixes
-  suffixes      = ["dalz"]
+  suffixes      = ["dlz"]
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network
@@ -141,25 +141,25 @@ resource "azurerm_subnet_network_security_group_association" "databricks_private
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_peering
-resource "azurerm_virtual_network_peering" "dalz_to_clz" {
-  name                      = azurecaf_name.dalz_to_clz.result
+resource "azurerm_virtual_network_peering" "dlz_to_clz" {
+  name                      = azurecaf_name.dlz_to_clz.result
   resource_group_name       = azurerm_resource_group.this.name
   virtual_network_name      = azurerm_virtual_network.this.name
   remote_virtual_network_id = var.connectivity_landing_zone_virtual_network_id
   use_remote_gateways       = true
 }
 
-resource "azurerm_virtual_network_peering" "clz_to_dalz" {
+resource "azurerm_virtual_network_peering" "clz_to_dlz" {
   provider = azurerm.connectivity_landing_zone_subscription
 
-  name                      = azurecaf_name.clz_to_dalz.result
+  name                      = azurecaf_name.clz_to_dlz.result
   resource_group_name       = data.azurerm_resource_group.connectivity_landing_zone.name
   virtual_network_name      = data.azurerm_virtual_network.connectivity_landing_zone.name
   remote_virtual_network_id = azurerm_virtual_network.this.id
   allow_gateway_transit     = true
 
   depends_on = [
-    azurerm_virtual_network_peering.dalz_to_clz
+    azurerm_virtual_network_peering.dlz_to_clz
   ]
 }
 

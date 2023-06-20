@@ -22,7 +22,7 @@ variable "databricks_resource_id" {
 variable "global_settings" {
   default = {
     azurecaf_name = {
-      prefixes = ["azc", "mgm", "payg"]
+      prefixes = ["az", "cf", "dmz"]
     }
   }
 }

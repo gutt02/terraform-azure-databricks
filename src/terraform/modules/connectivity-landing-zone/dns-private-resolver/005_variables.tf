@@ -1,7 +1,7 @@
 variable "global_settings" {
   default = {
     azurecaf_name = {
-      prefixes = ["azc", "clz", "payg"]
+      prefixes = ["az", "cf", "clz"]
     }
   }
 }

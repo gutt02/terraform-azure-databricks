@@ -24,7 +24,7 @@ variable "client_secret" {
 variable "global_settings" {
   default = {
     azurecaf_name = {
-      prefixes = ["azc", "clz", "payg"]
+      prefixes = ["az", "cf", "clz"]
     }
   }
 }
@@ -77,11 +77,11 @@ variable "tags" {
   })
 
   default = {
-    created_by  = "azc-iac-payg-sp-tf"
+    created_by  = "azc-iac-acf-sp-tf"
     contact     = "contact@me"
-    customer    = "Azure Cloud"
-    environment = "Pay As You Go"
-    project     = "Playground"
+    customer    = "Azure"
+    environment = "Cloud Foundation"
+    project     = "Connectivity Landing Zone"
   }
 
   description = "Default tags for resources, only applied to resource groups"
