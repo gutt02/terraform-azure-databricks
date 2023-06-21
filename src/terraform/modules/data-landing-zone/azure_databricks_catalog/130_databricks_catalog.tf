@@ -33,6 +33,7 @@ resource "databricks_catalog" "this" {
   force_destroy = true
 
   depends_on = [
+    databricks_metastore_assignment.this,
     databricks_external_location.this
   ]
 }

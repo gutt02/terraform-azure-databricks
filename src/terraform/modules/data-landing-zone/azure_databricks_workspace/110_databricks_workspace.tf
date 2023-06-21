@@ -12,7 +12,7 @@ resource "azurerm_databricks_workspace" "this" {
   resource_group_name = azurerm_resource_group.this.name
 
   custom_parameters {
-    no_public_ip                                         = true
+    no_public_ip                                         = var.enable_private_endpoints ? true : false
     public_subnet_name                                   = data.azurerm_subnet.databricks_public.name
     public_subnet_network_security_group_association_id  = var.databricks_public_network_security_group_association_id
     private_subnet_name                                  = data.azurerm_subnet.databricks_private.name
@@ -22,17 +22,17 @@ resource "azurerm_databricks_workspace" "this" {
   }
 
   managed_resource_group_name           = "${azurerm_resource_group.this.name}-managed"
-  network_security_group_rules_required = "NoAzureDatabricksRules"
-  public_network_access_enabled         = false
+  network_security_group_rules_required = var.enable_private_endpoints ? "NoAzureDatabricksRules" : null
+  public_network_access_enabled         = var.enable_private_endpoints ? false : true
   sku                                   = "premium"
 }
 
-# https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/metastore_assignment
-resource "databricks_metastore_assignment" "this" {
-  workspace_id = azurerm_databricks_workspace.this.workspace_id
-  metastore_id = var.databricks_metastore_id
+# # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/metastore_assignment
+# resource "databricks_metastore_assignment" "this" {
+#   workspace_id = azurerm_databricks_workspace.this.workspace_id
+#   metastore_id = var.databricks_metastore_id
 
-  depends_on = [ 
-    azurerm_private_endpoint.databricks_ui_api_fe
-   ]
-}
+#   depends_on = [
+#     azurerm_private_endpoint.databricks_ui_api_fe
+#   ]
+# }

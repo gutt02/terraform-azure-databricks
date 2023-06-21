@@ -12,7 +12,7 @@ resource "azurerm_databricks_workspace" "this" {
   resource_group_name = azurerm_resource_group.this.name
 
   custom_parameters {
-    no_public_ip                                         = true
+    no_public_ip                                         = var.enable_private_endpoints ? true : false
     public_subnet_name                                   = data.azurerm_subnet.databricks_public.name
     public_subnet_network_security_group_association_id  = var.databricks_public_network_security_group_association_id
     private_subnet_name                                  = data.azurerm_subnet.databricks_private.name
@@ -22,7 +22,7 @@ resource "azurerm_databricks_workspace" "this" {
   }
 
   managed_resource_group_name           = "${azurerm_resource_group.this.name}-managed"
-  network_security_group_rules_required = "NoAzureDatabricksRules"
-  public_network_access_enabled         = false
+  network_security_group_rules_required = var.enable_private_endpoints ? "NoAzureDatabricksRules" : null
+  public_network_access_enabled         = var.enable_private_endpoints ? false : true
   sku                                   = "premium"
 }

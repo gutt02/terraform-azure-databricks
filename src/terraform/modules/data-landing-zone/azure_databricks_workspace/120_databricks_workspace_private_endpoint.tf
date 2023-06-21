@@ -2,6 +2,8 @@
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint
 # https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource
 resource "azurerm_private_endpoint" "databricks_ui_api_be" {
+  count = var.enable_private_endpoints ? 1 : 0
+
   name                = "${azurerm_databricks_workspace.this.name}-pe-databricks_ui_api-be"
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name
@@ -21,6 +23,8 @@ resource "azurerm_private_endpoint" "databricks_ui_api_be" {
 }
 
 resource "azurerm_private_endpoint" "databricks_ui_api_fe" {
+  count = var.enable_private_endpoints ? 1 : 0
+
   name                = "${azurerm_databricks_workspace.this.name}-pe-databricks_ui_api-fe"
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name
@@ -40,6 +44,8 @@ resource "azurerm_private_endpoint" "databricks_ui_api_fe" {
 }
 
 resource "azurerm_private_endpoint" "browser_authentication" {
+  count = var.enable_private_endpoints ? 1 : 0
+
   name                = "${azurerm_databricks_workspace.this.name}-pe-browser_authentication"
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name

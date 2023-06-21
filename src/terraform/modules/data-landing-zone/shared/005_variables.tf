@@ -1,3 +1,19 @@
+variable "agent_ip" {
+  type        = string
+  description = "IP of the deployment agent."
+}
+
+variable "client_ip" {
+  type = object({
+    name             = string
+    cidr             = string
+    start_ip_address = string
+    end_ip_address   = string
+  })
+
+  description = "Client IP."
+}
+
 variable "client_secret" {
   type        = string
   sensitive   = true
@@ -51,6 +67,12 @@ variable "tags" {
   }
 
   description = "Default tags for resources, only applied to resource groups"
+}
+
+variable "use_remote_gateways" {
+  type        = bool
+  default     = true
+  description = "Use remote gateways in peering."
 }
 
 variable "virtual_network" {

@@ -2,7 +2,8 @@
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/group
 resource "databricks_group" "da_ca" {
-  provider     = databricks.azure_account
+  provider = databricks.azure_account
+
   display_name = "Catalog Admins (${data.azurerm_databricks_workspace.this.name})"
 }
 
@@ -11,20 +12,28 @@ resource "databricks_group" "da_de" {
   display_name = "Data Engineers (${data.azurerm_databricks_workspace.this.name})"
 }
 
-# https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/group
-resource "databricks_group" "ca" {
-  display_name = databricks_group.da_ca.display_name
+# https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_permission_assignment
+resource "databricks_mws_permission_assignment" "ca" {
+  provider = databricks.azure_account
+
+  workspace_id = data.azurerm_databricks_workspace.this.workspace_id
+  principal_id = databricks_group.da_ca.id
+  permissions  = ["USER"]
 
   depends_on = [
-    databricks_group.da_ca
+    databricks_metastore_assignment.this
   ]
 }
 
-resource "databricks_group" "de" {
-  display_name = databricks_group.da_de.display_name
+resource "databricks_mws_permission_assignment" "de" {
+  provider = databricks.azure_account
+
+  workspace_id = data.azurerm_databricks_workspace.this.workspace_id
+  principal_id = databricks_group.da_de.id
+  permissions  = ["USER"]
 
   depends_on = [
-    databricks_group.da_de
+    databricks_metastore_assignment.this
   ]
 }
 
@@ -40,11 +49,11 @@ resource "databricks_grants" "metastore" {
 resource "databricks_grants" "catalog" {
   catalog = databricks_catalog.this.name
   grant {
-    principal  = databricks_group.ca.display_name
+    principal  = databricks_group.da_ca.display_name
     privileges = ["USE_CATALOG", "USE_SCHEMA", "CREATE_SCHEMA", "CREATE_TABLE", "MODIFY"]
   }
   grant {
-    principal  = databricks_group.de.display_name
+    principal  = databricks_group.da_de.display_name
     privileges = ["USE_CATALOG", "USE_SCHEMA", "CREATE_SCHEMA", "CREATE_TABLE", "MODIFY"]
   }
 }
@@ -52,11 +61,11 @@ resource "databricks_grants" "catalog" {
 resource "databricks_grants" "storage_credential" {
   storage_credential = databricks_storage_credential.this.id
   grant {
-    principal  = databricks_group.ca.display_name
+    principal  = databricks_group.da_ca.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
   grant {
-    principal  = databricks_group.de.display_name
+    principal  = databricks_group.da_de.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
 }
@@ -65,11 +74,11 @@ resource "databricks_grants" "external_location" {
   external_location = databricks_external_location.this.id
 
   grant {
-    principal  = databricks_group.ca.display_name
+    principal  = databricks_group.da_ca.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
   grant {
-    principal  = databricks_group.de.display_name
+    principal  = databricks_group.da_de.display_name
     privileges = ["ALL_PRIVILEGES"]
   }
 }

@@ -146,7 +146,7 @@ resource "azurerm_virtual_network_peering" "dmz_to_clz" {
   resource_group_name       = azurerm_resource_group.this.name
   virtual_network_name      = azurerm_virtual_network.this.name
   remote_virtual_network_id = var.connectivity_landing_zone_virtual_network_id
-  use_remote_gateways       = true
+  use_remote_gateways       = var.use_remote_gateways
 }
 
 resource "azurerm_virtual_network_peering" "clz_to_dmz" {
@@ -156,7 +156,7 @@ resource "azurerm_virtual_network_peering" "clz_to_dmz" {
   resource_group_name       = data.azurerm_resource_group.connectivity_landing_zone.name
   virtual_network_name      = data.azurerm_virtual_network.connectivity_landing_zone.name
   remote_virtual_network_id = azurerm_virtual_network.this.id
-  allow_gateway_transit     = true
+  allow_gateway_transit     = var.use_remote_gateways
 
   depends_on = [
     azurerm_virtual_network_peering.dmz_to_clz

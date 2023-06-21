@@ -1,3 +1,19 @@
+variable "agent_ip" {
+  type        = string
+  description = "IP of the deployment agent."
+}
+
+variable "client_ip" {
+  type = object({
+    name             = string
+    cidr             = string
+    start_ip_address = string
+    end_ip_address   = string
+  })
+
+  description = "Client IP."
+}
+
 variable "client_secret" {
   type        = string
   sensitive   = true
@@ -27,6 +43,12 @@ variable "databricks_public_network_security_group_association_id" {
 variable "databricks_public_subnet_id" {
   type        = string
   description = "Id of the databricks public subnet."
+}
+
+variable "enable_private_endpoints" {
+  type        = bool
+  default     = true
+  description = "Enable private endpoints."
 }
 
 variable "global_settings" {
