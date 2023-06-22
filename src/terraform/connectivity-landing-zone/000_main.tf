@@ -33,7 +33,7 @@ data "azurerm_subscription" "subscription" {
 }
 
 module "shared" {
-  source = "./shared"
+  source = "./modules/shared"
 
   agent_ip             = var.agent_ip
   client_ip            = var.client_ip
@@ -47,9 +47,9 @@ module "shared" {
 }
 
 module "dns_private_resolver" {
-  count = var.enable_module_dns_private_resolver ? 1 : 0
+  source = "./modules/dns-private-resolver"
 
-  source = "./dns-private-resolver"
+  count = var.enable_module_dns_private_resolver ? 1 : 0
 
   global_settings                         = var.global_settings
   location                                = var.location
@@ -62,9 +62,9 @@ module "dns_private_resolver" {
 }
 
 module "virtual_network_gateway" {
-  count = var.enable_module_virtual_network_gateway ? 1 : 0
+  source = "./modules/virtual-network-gateway"
 
-  source = "./virtual-network-gateway"
+  count = var.enable_module_virtual_network_gateway ? 1 : 0
 
   global_settings         = var.global_settings
   location                = var.location
