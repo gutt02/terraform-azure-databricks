@@ -6,6 +6,13 @@ resource "databricks_metastore" "this" {
     azurerm_storage_data_lake_gen2_filesystem.this.name,
   azurerm_storage_account.this.name)
   force_destroy = true
+
+  lifecycle {
+    ignore_changes = [
+      updated_by,
+      updated_at
+    ]
+  }
 }
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/metastore_data_access

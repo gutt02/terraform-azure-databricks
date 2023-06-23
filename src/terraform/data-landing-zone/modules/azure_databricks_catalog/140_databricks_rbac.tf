@@ -4,19 +4,19 @@
 resource "databricks_group" "da_ca" {
   provider = databricks.azure_account
 
-  display_name = "Catalog Admins (${data.azurerm_databricks_workspace.this.name})"
+  display_name = "Catalog Admins (${var.databricks_workspace.name})"
 }
 
 resource "databricks_group" "da_de" {
   provider     = databricks.azure_account
-  display_name = "Data Engineers (${data.azurerm_databricks_workspace.this.name})"
+  display_name = "Data Engineers (${var.databricks_workspace.name})"
 }
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_permission_assignment
 resource "databricks_mws_permission_assignment" "ca" {
   provider = databricks.azure_account
 
-  workspace_id = data.azurerm_databricks_workspace.this.workspace_id
+  workspace_id = var.databricks_workspace.workspace_id
   principal_id = databricks_group.da_ca.id
   permissions  = ["USER"]
 
@@ -28,7 +28,7 @@ resource "databricks_mws_permission_assignment" "ca" {
 resource "databricks_mws_permission_assignment" "de" {
   provider = databricks.azure_account
 
-  workspace_id = data.azurerm_databricks_workspace.this.workspace_id
+  workspace_id = var.databricks_workspace.workspace_id
   principal_id = databricks_group.da_de.id
   permissions  = ["USER"]
 

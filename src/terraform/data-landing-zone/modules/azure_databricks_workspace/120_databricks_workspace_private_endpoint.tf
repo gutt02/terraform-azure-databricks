@@ -7,11 +7,11 @@ resource "azurerm_private_endpoint" "databricks_ui_api_be" {
   name                = "${azurerm_databricks_workspace.this.name}-pe-databricks_ui_api-be"
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name
-  subnet_id           = data.azurerm_subnet.private_endpoints.id
+  subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {
-    name                 = data.azurerm_private_dns_zone.databricks.name
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.databricks.id]
+    name                 = var.connectivity_landing_zone_private_dns_zone_azuredatabricks.name
+    private_dns_zone_ids = [var.connectivity_landing_zone_private_dns_zone_azuredatabricks.id]
   }
 
   private_service_connection {
@@ -28,11 +28,11 @@ resource "azurerm_private_endpoint" "databricks_ui_api_fe" {
   name                = "${azurerm_databricks_workspace.this.name}-pe-databricks_ui_api-fe"
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name
-  subnet_id           = data.azurerm_subnet.private_endpoints.id
+  subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {
-    name                 = data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.name
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.id]
+    name                 = var.connectivity_landing_zone_private_dns_zone_azuredatabricks.name
+    private_dns_zone_ids = [var.connectivity_landing_zone_private_dns_zone_azuredatabricks.id]
   }
 
   private_service_connection {
@@ -49,11 +49,11 @@ resource "azurerm_private_endpoint" "browser_authentication" {
   name                = "${azurerm_databricks_workspace.this.name}-pe-browser_authentication"
   location            = var.location
   resource_group_name = azurerm_resource_group.this.name
-  subnet_id           = data.azurerm_subnet.private_endpoints.id
+  subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {
-    name                 = data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.name
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.connectivity_landing_zone_databricks.id]
+    name                 = var.connectivity_landing_zone_private_dns_zone_azuredatabricks.name
+    private_dns_zone_ids = [var.connectivity_landing_zone_private_dns_zone_azuredatabricks.id]
   }
 
   private_service_connection {

@@ -14,17 +14,14 @@ resource "azurerm_storage_account" "this" {
   account_replication_type = "GRS"
   is_hns_enabled           = true
 
+  network_rules {
+    default_action = "Deny"
+    ip_rules       = var.enable_private_endpoints ? [] : distinct([var.agent_ip, replace(replace(var.client_ip.cidr, "/31", ""), "/32", "")])
+  }
+
   identity {
     type = "SystemAssigned"
   }
-}
-
-# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account_network_rules
-resource "azurerm_storage_account_network_rules" "this" {
-  storage_account_id = azurerm_storage_account.this.id
-
-  default_action = "Deny"
-  ip_rules       = var.enable_private_endpoints ? [] : distinct([var.agent_ip, replace(replace(var.client_ip.cidr, "/31", ""), "/32", "")])
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment
@@ -93,7 +90,6 @@ resource "azurerm_private_endpoint" "dfs" {
 #   container_access_type = "private"
 
 #   depends_on = [
-#     azurerm_storage_account_network_rules.this,
 #     azurerm_private_endpoint.blob,
 #     azurerm_private_endpoint.dfs,
 #     azurerm_role_assignment.service_principal
@@ -106,7 +102,6 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
   storage_account_id = azurerm_storage_account.this.id
 
   depends_on = [
-    azurerm_storage_account_network_rules.this,
     azurerm_private_endpoint.blob,
     azurerm_private_endpoint.dfs,
     azurerm_role_assignment.service_principal

@@ -20,19 +20,14 @@ variable "client_secret" {
   description = "Client secret of the service principal."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_blob_id" {
-  type        = string
-  description = "Id of the private dns zone for BLOBs in the connectivity subscription."
+variable "connectivity_landing_zone_private_dns_zone_blob" {
+  type        = any
+  description = "The private dns zone for BLOBs in the connectivity subscription."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_dfs_id" {
-  type        = string
-  description = "Id of the private dns zone for Data Lake File system in the connectivity subscription."
-}
-
-variable "databricks_account_id" {
-  type        = string
-  description = "The Id of Databricks Account."
+variable "connectivity_landing_zone_private_dns_zone_dfs" {
+  type        = any
+  description = "The private dns zone for Data Lake File system in the connectivity subscription."
 }
 
 variable "databricks_metastore_id" {
@@ -40,9 +35,9 @@ variable "databricks_metastore_id" {
   description = "The Databricks Metastore Id."
 }
 
-variable "databricks_resource_id" {
-  type        = string
-  description = "The Azure resource Id for the Azure Databricks workspace."
+variable "databricks_workspace" {
+  type        = any
+  description = "The Azure Databricks workspace."
 }
 
 variable "enable_private_endpoints" {
@@ -52,11 +47,8 @@ variable "enable_private_endpoints" {
 }
 
 variable "global_settings" {
-  default = {
-    azurecaf_name = {
-      prefixes = ["az", "cf", "dlz"]
-    }
-  }
+  type        = any
+  description = "Global settings."
 }
 
 variable "location" {
@@ -65,9 +57,9 @@ variable "location" {
   description = "Default Azure region, use Azure CLI notation."
 }
 
-variable "private_endpoints_subnet_id" {
-  type        = string
-  description = "Id of the private endpoints subnet."
+variable "private_endpoints_subnet" {
+  type        = any
+  description = "The private endpoints subnet."
 }
 
 variable "tags" {
@@ -78,14 +70,6 @@ variable "tags" {
     environment = string
     project     = string
   })
-
-  default = {
-    created_by  = "azc-iac-acf-sp-tf"
-    contact     = "contact@me"
-    customer    = "Azure"
-    environment = "Cloud Foundation"
-    project     = "Data Landing Zone"
-  }
 
   description = "Default tags for resources, only applied to resource groups"
 }

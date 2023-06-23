@@ -27,7 +27,7 @@ variable "connectivity_landing_zone_private_dns_zone_azuredatabricks_id" {
 
 variable "connectivity_landing_zone_private_dns_zone_blob_id" {
   type        = string
-  description = "Id of theprivate dns zone for BLOBs in the connectivity subscription."
+  description = "Id of the private dns zone for BLOBs in the connectivity subscription."
 }
 
 variable "connectivity_landing_zone_private_dns_zone_dfs_id" {
@@ -40,10 +40,20 @@ variable "connectivity_landing_zone_virtual_network_id" {
   description = "Virutal Network Id of of the connectivity landing zone."
 }
 
-variable "enable_metastore" {
+variable "databricks_account_id" {
+  type        = string
+  description = "The Databricks Account Id."
+}
+
+variable "databricks_metastore_id" {
+  type        = string
+  description = "The Databricks Metastore Id."
+}
+
+variable "enable_catalog" {
   type        = bool
   default     = false
-  description = "Enable Databricks metastore, ensure that the service principal has the role admin_account in the Databricks account."
+  description = "Enable Databricks Catalog, ensure that the service principal has the role admin_account in the Databricks account."
 }
 
 variable "enable_private_endpoints" {
@@ -56,7 +66,7 @@ variable "global_settings" {
   type = any
   default = {
     azurecaf_name = {
-      prefixes = ["az", "cf", "dmz"]
+      prefixes = ["az", "cf", "dlz"]
     }
   }
 
@@ -69,10 +79,14 @@ variable "location" {
   description = "Default Azure region, use Azure CLI notation."
 }
 
-variable "metastore_name" {
-  type        = string
-  default     = "metastore-euw"
-  description = "Name of the Databricks Metastore."
+variable "private_dns_zones" {
+  type = map(string)
+
+  default = {
+    dns_zone_azuredatabricks = "privatelink.azuredatabricks.net"
+  }
+
+  description = "Map of private DNS zones."
 }
 
 variable "tags" {
@@ -89,7 +103,7 @@ variable "tags" {
     contact     = "contact@me"
     customer    = "Azure"
     environment = "Cloud Foundation"
-    project     = "Data Management Zone"
+    project     = "Data Landing Zone"
   }
 
   description = "Default tags for resources, only applied to resource groups"
@@ -112,19 +126,19 @@ variable "virtual_network" {
   })
 
   default = {
-    address_space = "192.168.10.0/23"
+    address_space = "192.168.20.0/23"
     subnets = {
       private_endpoints = {
         name          = "private-endpoints"
-        address_space = "192.168.10.0/26"
+        address_space = "192.168.20.0/26"
       }
       databricks_public = {
         name          = "databricks-public"
-        address_space = "192.168.10.64/26"
+        address_space = "192.168.20.64/26"
       }
       databricks_private = {
         name          = "databricks-private"
-        address_space = "192.168.10.128/26"
+        address_space = "192.168.20.128/26"
       }
     }
   }

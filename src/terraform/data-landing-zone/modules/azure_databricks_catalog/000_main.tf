@@ -6,11 +6,12 @@ terraform {
     }
 
     azurecaf = {
-      source  = "aztfmod/azurecaf"
+      source = "aztfmod/azurecaf"
     }
 
     databricks = {
-      source = "databricks/databricks"
+      source                = "databricks/databricks"
+      configuration_aliases = [databricks.azure_account]
     }
   }
 }

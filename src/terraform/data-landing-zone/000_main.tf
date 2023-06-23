@@ -43,6 +43,16 @@ provider "databricks" {
   azure_tenant_id             = data.azurerm_client_config.client_config.tenant_id
 }
 
+provider "databricks" {
+  alias               = "azure_account"
+  host                = "https://accounts.azuredatabricks.net"
+  account_id          = var.databricks_account_id
+  azure_client_id     = data.azurerm_client_config.client_config.client_id
+  azure_client_secret = var.client_secret
+  azure_tenant_id     = data.azurerm_client_config.client_config.tenant_id
+  # auth_type  = "azure-cli"
+}
+
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config
 data "azurerm_client_config" "client_config" {
 }
@@ -64,6 +74,7 @@ module "shared" {
   connectivity_landing_zone_virtual_network = data.azurerm_virtual_network.connectivity_landing_zone
   global_settings                           = var.global_settings
   location                                  = var.location
+  private_dns_zones                         = var.private_dns_zones
   tags                                      = var.tags
   use_remote_gateways                       = var.use_remote_gateways
   virtual_network                           = var.virtual_network
@@ -94,26 +105,28 @@ module "azure_databricks_workspace" {
   depends_on = [module.shared]
 }
 
-module "azure_databricks_metastore" {
-  source = "./modules/azure_databricks_metastore"
+module "azure_databricks_catalog" {
+  source = "./modules/azure_databricks_catalog"
 
-  count = var.enable_metastore ? 1 : 0
+  count = var.enable_catalog ? 1 : 0
 
   providers = {
     azurerm.connectivity_landing_zone = azurerm.connectivity_landing_zone
+    databricks.azure_account          = databricks.azure_account
   }
 
   agent_ip                                        = var.agent_ip
   client_ip                                       = var.client_ip
   client_secret                                   = var.client_secret
-  connectivity_landing_zone_private_dns_zone_blob = var.connectivity_landing_zone_private_dns_zone_blob_id
-  connectivity_landing_zone_private_dns_zone_dfs  = var.connectivity_landing_zone_private_dns_zone_dfs_id
+  connectivity_landing_zone_private_dns_zone_blob = data.azurerm_private_dns_zone.blob
+  connectivity_landing_zone_private_dns_zone_dfs  = data.azurerm_private_dns_zone.dfs
+  databricks_metastore_id                         = var.databricks_metastore_id
   databricks_workspace                            = module.azure_databricks_workspace.databricks_workspace
   enable_private_endpoints                        = var.enable_private_endpoints
   global_settings                                 = var.global_settings
   location                                        = var.location
-  metastore_name                                  = var.metastore_name
   private_endpoints_subnet                        = module.shared.private_endpoints_subnet
+  tags                                            = var.tags
 
   depends_on = [module.azure_databricks_workspace]
 }
