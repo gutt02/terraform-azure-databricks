@@ -13,12 +13,12 @@ resource "azurerm_databricks_workspace" "this" {
 
   custom_parameters {
     no_public_ip                                         = var.enable_private_endpoints ? true : false
-    public_subnet_name                                   = data.azurerm_subnet.databricks_public.name
-    public_subnet_network_security_group_association_id  = var.databricks_public_network_security_group_association_id
-    private_subnet_name                                  = data.azurerm_subnet.databricks_private.name
-    private_subnet_network_security_group_association_id = var.databricks_private_network_security_group_association_id
+    public_subnet_name                                   = var.databricks_public_subnet.name
+    public_subnet_network_security_group_association_id  = var.databricks_public_network_security_group_association.id
+    private_subnet_name                                  = var.databricks_private_subnet.name
+    private_subnet_network_security_group_association_id = var.databricks_private_network_security_group_association.id
     storage_account_name                                 = azurecaf_name.dbw.results["azurerm_storage_account"]
-    virtual_network_id                                   = data.azurerm_virtual_network.this.id
+    virtual_network_id                                   = var.virtual_network.id
   }
 
   managed_resource_group_name           = "${azurerm_resource_group.this.name}-managed"

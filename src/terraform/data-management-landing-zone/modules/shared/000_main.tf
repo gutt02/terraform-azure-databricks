@@ -1,10 +1,9 @@
 terraform {
-  backend "azurerm" {}
-
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.52.0"
+      source                = "hashicorp/azurerm"
+      version               = "~> 3.58.0"
+      configuration_aliases = [azurerm.connectivity_landing_zone]
     }
 
     azurecaf = {
@@ -13,23 +12,6 @@ terraform {
     }
   }
 }
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
-}
-
-provider "azurerm" {
-  alias           = "connectivity_landing_zone_subscription"
-  subscription_id = local.connectivity_landing_zone_subscription_id
-
-  features {}
-}
-
-provider "azurecaf" {}
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config
 data "azurerm_client_config" "client_config" {}

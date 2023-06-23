@@ -9,7 +9,7 @@ resource "azurecaf_name" "storage_account" {
 resource "azurerm_storage_account" "this" {
   name                     = azurecaf_name.storage_account.result
   location                 = var.location
-  resource_group_name      = data.azurerm_resource_group.this.name
+  resource_group_name      = var.databricks_workspace.resource_group_name
   account_tier             = "Standard"
   account_replication_type = "GRS"
   is_hns_enabled           = true
@@ -49,12 +49,12 @@ resource "azurerm_private_endpoint" "blob" {
 
   name                = "${azurerm_storage_account.this.name}-pe-blob"
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.this.name
-  subnet_id           = data.azurerm_subnet.this.id
+  resource_group_name = var.databricks_workspace.resource_group_name
+  subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {
-    name                 = data.azurerm_private_dns_zone.blob.name
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.blob.id]
+    name                 = var.connectivity_landing_zone_private_dns_zone_blob.name
+    private_dns_zone_ids = [var.connectivity_landing_zone_private_dns_zone_blob.id]
   }
 
   private_service_connection {
@@ -70,12 +70,12 @@ resource "azurerm_private_endpoint" "dfs" {
 
   name                = "${azurerm_storage_account.this.name}-pe-dfs"
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.this.name
-  subnet_id           = data.azurerm_subnet.this.id
+  resource_group_name = var.databricks_workspace.resource_group_name
+  subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {
-    name                 = data.azurerm_private_dns_zone.dfs.name
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.dfs.id]
+    name                 = var.connectivity_landing_zone_private_dns_zone_dfs.name
+    private_dns_zone_ids = [var.connectivity_landing_zone_private_dns_zone_blob.id]
   }
 
   private_service_connection {
@@ -93,6 +93,7 @@ resource "azurerm_private_endpoint" "dfs" {
 #   container_access_type = "private"
 
 #   depends_on = [
+#     azurerm_storage_account_network_rules.this,
 #     azurerm_private_endpoint.blob,
 #     azurerm_private_endpoint.dfs,
 #     azurerm_role_assignment.service_principal
