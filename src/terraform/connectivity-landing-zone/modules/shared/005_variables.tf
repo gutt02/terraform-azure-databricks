@@ -99,32 +99,5 @@ variable "virtual_network" {
     }))
   })
 
-  default = {
-    address_space = "192.168.0.0/24"
-    subnets = {
-      gateway = {
-        address_space       = "192.168.0.0/27"
-        client_address_pool = "192.168.255.0/27"
-        description         = "GatewaySubnet"
-      }
-      bastion = {
-        name          = "AzureBastionSubnet"
-        address_space = "192.168.0.32/27"
-      }
-      private_endpoints = {
-        address_space = "192.168.0.64/27"
-        description   = "Private Endpoints"
-      }
-      dns_private_resolver_inbound = {
-        address_space = "192.168.0.96/28"
-        description   = "DNS Private Resolver Outbound"
-      }
-      dns_private_resolver_outbound = {
-        address_space = "192.168.0.112/28"
-        description   = "DNS Private Resolver Inbound"
-      }
-    }
-  }
-
   description = "VNET destails."
 }

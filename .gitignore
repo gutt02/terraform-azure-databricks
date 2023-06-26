@@ -46,5 +46,6 @@ terraform.rc
 # Exclude certificates
 # **/certificates/*
 
-# Backups
+# Backups, etc.
 *.bkp
+*.dtmp

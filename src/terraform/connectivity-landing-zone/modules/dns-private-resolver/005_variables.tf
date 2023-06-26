@@ -1,14 +1,10 @@
 variable "global_settings" {
-  default = {
-    azurecaf_name = {
-      prefixes = ["az", "cf", "clz"]
-    }
-  }
+  type        = any
+  description = "Global settings."
 }
 
 variable "location" {
   type        = string
-  default     = "westeurope"
   description = "Default Azure region, use Azure CLI notation."
 }
 

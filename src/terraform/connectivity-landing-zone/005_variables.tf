@@ -21,20 +21,6 @@ variable "client_secret" {
   description = "Client secret of the service principal."
 }
 
-variable "global_settings" {
-  default = {
-    azurecaf_name = {
-      prefixes = ["az", "cf", "clz"]
-    }
-  }
-}
-
-variable "location" {
-  type        = string
-  default     = "westeurope"
-  description = "Default Azure region, use Azure CLI notation."
-}
-
 variable "enable_module_dns_private_resolver" {
   type        = bool
   default     = true
@@ -45,6 +31,23 @@ variable "enable_module_virtual_network_gateway" {
   type        = bool
   default     = true
   description = "Enable Virtual Network Gateway."
+}
+
+variable "global_settings" {
+  type    = any
+  default = {
+    azurecaf_name = {
+      prefixes = ["az", "cf", "clz"]
+    }
+  }
+
+  description = "Global settings."
+}
+
+variable "location" {
+  type        = string
+  default     = "westeurope"
+  description = "Default Azure region, use Azure CLI notation."
 }
 
 variable "on_premises_networks" {
