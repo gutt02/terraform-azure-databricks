@@ -143,7 +143,7 @@ variable "tags" {
     project     = "Connectivity Landing Zone"
   }
 
-  description = "Default tags for resources, only applied to resource groups"
+  description = "Default tags for resources, only applied to resource groups."
 }
 ```
 

@@ -71,5 +71,5 @@ variable "tags" {
     project     = string
   })
 
-  description = "Default tags for resources, only applied to resource groups"
+  description = "Default tags for resources, only applied to resource groups."
 }

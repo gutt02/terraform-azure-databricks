@@ -22,7 +22,7 @@
 
 This is a collection of Terraform scripts that can be used to create the Data Management Landing Zone in the Azure Databricks environment.
 
-> The Service Principal must have assigend the role `account_admin` before the Metastore can be created.
+> The Service Principal must have been assigend the role `account_admin` before the Metastore can be created.
 
 The deployment is performed in three steps:
 
@@ -157,7 +157,7 @@ variable "tags" {
     project     = "Data Management Zone"
   }
 
-  description = "Default tags for resources, only applied to resource groups"
+  description = "Default tags for resources, only applied to resource groups."
 }
 ```
 
@@ -278,7 +278,7 @@ variable "tags" {
     project     = string
   })
 
-  description = "Default tags for resources, only applied to resource groups"
+  description = "Default tags for resources, only applied to resource groups."
 }
 ```
 
@@ -453,7 +453,7 @@ variable "tags" {
     project     = string
   })
 
-  description = "Default tags for resources, only applied to resource groups"
+  description = "Default tags for resources, only applied to resource groups."
 }
 ```
 
