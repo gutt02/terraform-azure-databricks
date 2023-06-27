@@ -215,7 +215,7 @@ output "databricks_metastore" {
 ### Azure Resources
 
 * Resource Group
-* Virtual Network and Subnets.
+* Virtual Network and Subnets
 
 ### Variables
 
