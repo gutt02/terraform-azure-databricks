@@ -302,6 +302,8 @@ variable "dns_private_resolver_outbound_subnet_id" {
 
 > This module is optional.
 
+> Please generate a certificate and update the file `./certficates/PS2RootCert.cer`, see [Generate and export certificates for point-to-site using PowerShell](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-certificates-point-to-site).
+
 ### Azure Resources
 
 * Virtual Network Gateway
