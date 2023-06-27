@@ -1,9 +1,37 @@
-# curl ipinfo.io/ip
+# Terraform - Azure - Databricks - Connectivity Landing Zone
+
+## Table of Contents
+
+* [Introduction](#introduction)
+* [Variables](#variables)
+* [Output](#output)
+* [Module Shared](#module-shared)
+  * [Azure Resources](#azure-resources)
+  * [Variables](#variables-1)
+  * [Output](#output-1)
+* [Module DNS Private Resolver](#module-dns-private-resolver)
+  * [Azure Resources](#azure-resources-1)
+  * [Variables](#variables-2)
+  * [Output](#output-2)
+* [Module Virtual Network Gateway](#module-virtual-network-gateway)
+  * [Azure Resources](#azure-resources-2)
+  * [Variables](#variables-3)
+  * [Output](#output-3)
+
+## Introduction
+
+This is a collection of Terraform scripts that can be used to create the Connectivity Landing Zone for the Azure Databricks.
+
+## Variables
+
+```hcl
 variable "agent_ip" {
   type        = string
   description = "IP of the deployment agent."
 }
+```
 
+```hcl
 variable "client_ip" {
   type = object({
     name             = string
@@ -14,25 +42,33 @@ variable "client_ip" {
 
   description = "Client IP."
 }
+```
 
+```hcl
 variable "client_secret" {
   type        = string
   sensitive   = true
   description = "Client secret of the service principal."
 }
+```
 
+```hcl
 variable "enable_module_dns_private_resolver" {
   type        = bool
   default     = true
   description = "Enable DNS Private Resolver."
 }
+```
 
+```hcl
 variable "enable_module_virtual_network_gateway" {
   type        = bool
   default     = true
   description = "Enable Virtual Network Gateway."
 }
+```
 
+```hcl
 variable "global_settings" {
   type    = any
   default = {
@@ -43,13 +79,17 @@ variable "global_settings" {
 
   description = "Global settings."
 }
+```
 
+```hcl
 variable "location" {
   type        = string
   default     = "westeurope"
   description = "Default Azure region, use Azure CLI notation."
 }
+```
 
+```hcl
 variable "on_premises_networks" {
   type = list(object({
     name             = string
@@ -69,7 +109,9 @@ variable "on_premises_networks" {
 
   description = "List of on premises networks."
 }
+```
 
+```hcl
 variable "private_dns_zones" {
   type = map(string)
 
@@ -81,7 +123,9 @@ variable "private_dns_zones" {
 
   description = "Map of private DNS zones."
 }
+```
 
+```hcl
 variable "tags" {
   type = object({
     created_by  = string
@@ -101,7 +145,9 @@ variable "tags" {
 
   description = "Default tags for resources, only applied to resource groups"
 }
+```
 
+```hcl
 variable "virtual_network" {
   type = object({
     address_space = string
@@ -142,7 +188,9 @@ variable "virtual_network" {
 
   description = "VNET details."
 }
+```
 
+```hcl
 variable "virtual_network_gateway" {
   type = object({
     type          = string
@@ -178,3 +226,128 @@ variable "virtual_network_gateway" {
 
   description = "Virtual network gateway details."
 }
+```
+
+## Output
+
+```hcl
+output "gateway_subnet_id" {
+  value = module.shared.gateway_subnet_id
+}
+```
+
+```hcl
+output "private_dns_zone_ids" {
+  value = module.shared.private_dns_zone_ids
+}
+```
+
+```hcl
+output "virtual_network_id" {
+  value = module.shared.virtual_network_id
+}
+```
+
+## Module Shared
+
+### Azure Resources
+
+* Resource Group
+* Virtual Network and Subnets
+* Private DNS zones
+
+### Variables
+
+### Output
+
+## Module DNS Private Resolver
+
+> This module is optional.
+
+### Azure Resources
+
+* DNS Private Resolver
+
+### Variables
+
+```hcl
+variable "global_settings" {
+  type        = any
+  description = "Global settings."
+}
+```
+
+```hcl
+variable "location" {
+  type        = string
+  description = "Default Azure region, use Azure CLI notation."
+}
+```
+
+```hcl
+variable "dns_private_resolver_inbound_subnet_id" {
+  type        = string
+  description = "Id of the inbound subnet for the DNS Private Resolver."
+}
+```
+
+```hcl
+variable "dns_private_resolver_outbound_subnet_id" {
+  type        = string
+  description = "Id of the outbound subnet for the DNS Private Resolver."
+}
+```
+
+## Module Virtual Network Gateway
+
+> This module is optional.
+
+### Azure Resources
+
+* Virtual Network Gateway
+
+### Variables
+
+```hcl
+variable "global_settings" {
+  type = any
+  description = "Global settings."
+}
+```
+
+```hcl
+variable "location" {
+  type        = string
+  description = "Default Azure region, use Azure CLI notation."
+}
+```
+
+```hcl
+variable "gateway_subnet_id" {
+  type        = string
+  description = "Id of the Gateway Subnet."
+}
+```
+
+```hcl
+variable "virtual_network_gateway" {
+  type = object({
+    type          = string
+    vpn_type      = string
+    active_active = optional(bool)
+    enable_bgp    = optional(bool)
+    sku           = string
+
+    vpn_client_configuration = object({
+      address_space        = list(string)
+      vpn_client_protocols = list(string)
+
+      root_certificate = object({
+        name = string
+      })
+    })
+  })
+
+  description = "Virtual network gateway details."
+}
+```

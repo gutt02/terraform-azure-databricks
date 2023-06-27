@@ -62,5 +62,5 @@ variable "virtual_network" {
     }))
   })
 
-  description = "VNET destails."
+  description = "VNET details."
 }
