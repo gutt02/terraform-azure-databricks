@@ -460,7 +460,7 @@ variable "tags" {
 ```hcl
 variable "virtual_network" {
   type        = any
-  description = "The virtual network"
+  description = "The virtual network."
 }
 ```
 
