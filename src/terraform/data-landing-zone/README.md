@@ -415,7 +415,7 @@ variable "databricks_private_subnet" {
 ```hcl
 variable "databricks_public_network_security_group_association" {
   type        = any
-  description = "The databricks public network security association"
+  description = "The databricks public network security association."
 }
 ```
 
