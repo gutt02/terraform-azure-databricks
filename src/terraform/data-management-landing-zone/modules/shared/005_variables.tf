@@ -1,3 +1,13 @@
+variable "client_config" {
+  type        = any
+  description = "Configuration of the AzureRM provider."
+}
+
+variable "subscription" {
+  type        = any
+  description = "Information about an existing Subscription."
+}
+
 variable "agent_ip" {
   type        = string
   description = "IP of the deployment agent."

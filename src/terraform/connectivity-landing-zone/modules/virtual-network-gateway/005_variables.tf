@@ -1,5 +1,15 @@
+variable "client_config" {
+  type        = any
+  description = "Configuration of the AzureRM provider."
+}
+
+variable "subscription" {
+  type        = any
+  description = "Information about an existing Subscription."
+}
+
 variable "global_settings" {
-  type = any
+  type        = any
   description = "Global settings."
 }
 

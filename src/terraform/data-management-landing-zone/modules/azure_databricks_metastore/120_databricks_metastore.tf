@@ -1,7 +1,7 @@
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/metastore
 resource "databricks_metastore" "this" {
   name  = "metastore-euw"
-  owner = data.azurerm_client_config.client_config.client_id
+  owner = var.client_config.client_id
   storage_root = format("abfss://%s@%s.dfs.core.windows.net/",
     azurerm_storage_data_lake_gen2_filesystem.this.name,
   azurerm_storage_account.this.name)
@@ -18,7 +18,7 @@ resource "databricks_metastore" "this" {
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/metastore_data_access
 resource "databricks_metastore_data_access" "this" {
   metastore_id = databricks_metastore.this.id
-  name         = "${databricks_metastore.this.name}-da"
+  name         = databricks_metastore.this.name
   is_default   = true
 
   azure_managed_identity {

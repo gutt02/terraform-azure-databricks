@@ -25,32 +25,104 @@ GET https://{{databricks_instance}}/api/2.1/unity-catalog/metastores HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
+### External location
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Delete external location
+@external_location = *
+DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations/{{external_location}}?force=true HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Storage credential
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Delete storage credential
+@storage_credentional = *
+DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials/{{storage_credentional}}?force=true HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Users
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Users HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Groups
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Groups HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Groups details
+@group_id = *
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Groups/{{group_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Service Principals
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/ServicePrincipals HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Metastores
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/metastores HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### External location
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Delete external location
+@external_location = *
+DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations/{{external_location}}?force=true HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Storage credential
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Delete storage credential
+@storage_credentional = *
+DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials/{{storage_credentional}}?force=true HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
 ###
 ### Databricks account console
 ###
 
 ### Databricks account console, users
-GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Users
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Users HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Databricks account console, user
-GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Users/{{id}}
+@user_id = *
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Users/{{user_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Databricks account console, service principals
-GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Databricks account console, service principal
-GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals/{{id}}
+@service_principal = *
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals/{{@service_principal}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Databricks account console, service principal (patch)
-PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals/{{id}}
+PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals/{{service_principal}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -72,17 +144,18 @@ Authorization: Bearer {{token}}
 }
 
 ### Databricks account console, groups
-GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Databricks account console, group
-GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{id}}
+@group_id = *
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{group_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Databricks account console, add group
-POST https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups
+POST https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -96,7 +169,8 @@ Authorization: Bearer {{token}}
 }
 
 ### Databricks account console, patch group
-PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{id}}
+@group_id = *
+PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{group_id}}
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -117,8 +191,10 @@ Authorization: Bearer {{token}}
   ]
 }
 
-### Databrcisk account console, add user
-PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{id}}
+### Databricks account console, add user
+@group_id = *
+@user_id = *
+PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{group_id}}
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -132,10 +208,29 @@ Authorization: Bearer {{token}}
       "value": {
         "members": [
           {
-            "value": "{{id}}"
+            "value": "{{user_id}}"
           }
         ]
       }
     }
   ]
 }
+
+### Databricks account console, list catalogs
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/catalogs HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Databricks account console, get catalog
+@catalog_name = my_catalog
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/catalogs/{{catalog_name}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### https://docs.databricks.com/api/azure/workspace/grants/get
+### Databricks account console, get permissions
+@securable_type = *
+@full_name = *
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type}}/{{full_name}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}

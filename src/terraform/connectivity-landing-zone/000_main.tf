@@ -25,16 +25,18 @@ provider "azurerm" {
 provider "azurecaf" {}
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config
-data "azurerm_client_config" "client_config" {
+data "azurerm_client_config" "this" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription
-data "azurerm_subscription" "subscription" {
+data "azurerm_subscription" "this" {
 }
 
 module "shared" {
   source = "./modules/shared"
 
+  client_config        = data.azurerm_client_config.this
+  subscription         = data.azurerm_subscription.this
   agent_ip             = var.agent_ip
   client_ip            = var.client_ip
   client_secret        = var.client_secret
@@ -51,6 +53,8 @@ module "dns_private_resolver" {
 
   count = var.enable_module_dns_private_resolver ? 1 : 0
 
+  client_config                           = data.azurerm_client_config.this
+  subscription                            = data.azurerm_subscription.this
   global_settings                         = var.global_settings
   location                                = var.location
   dns_private_resolver_inbound_subnet_id  = module.shared.dns_private_resolver_inbound_subnet_id
@@ -66,6 +70,8 @@ module "virtual_network_gateway" {
 
   count = var.enable_module_virtual_network_gateway ? 1 : 0
 
+  client_config           = data.azurerm_client_config.this
+  subscription            = data.azurerm_subscription.this
   global_settings         = var.global_settings
   location                = var.location
   gateway_subnet_id       = module.shared.gateway_subnet_id

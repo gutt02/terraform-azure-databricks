@@ -83,6 +83,10 @@ resource "azurerm_subnet" "databricks_public" {
       ]
     }
   }
+
+  service_endpoints = [
+    "Microsoft.Storage"
+  ]
 }
 
 resource "azurerm_subnet" "databricks_private" {
@@ -103,6 +107,10 @@ resource "azurerm_subnet" "databricks_private" {
       ]
     }
   }
+
+  service_endpoints = [
+    "Microsoft.Storage"
+  ]
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group

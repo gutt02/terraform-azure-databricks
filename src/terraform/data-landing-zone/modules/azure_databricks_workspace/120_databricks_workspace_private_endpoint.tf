@@ -10,8 +10,8 @@ resource "azurerm_private_endpoint" "databricks_ui_api_be" {
   subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {
-    name                 = var.connectivity_landing_zone_private_dns_zone_azuredatabricks.name
-    private_dns_zone_ids = [var.connectivity_landing_zone_private_dns_zone_azuredatabricks.id]
+    name                 = var.private_dns_zone_azuredatabricks.name
+    private_dns_zone_ids = [var.private_dns_zone_azuredatabricks.id]
   }
 
   private_service_connection {

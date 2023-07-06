@@ -34,7 +34,7 @@ variable "enable_module_virtual_network_gateway" {
 }
 
 variable "global_settings" {
-  type    = any
+  type = any
   default = {
     azurecaf_name = {
       prefixes = ["az", "cf", "clz"]

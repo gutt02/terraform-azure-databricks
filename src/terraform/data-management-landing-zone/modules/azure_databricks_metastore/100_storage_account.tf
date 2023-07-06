@@ -17,6 +17,11 @@ resource "azurerm_storage_account" "this" {
   network_rules {
     default_action = "Deny"
     ip_rules       = var.enable_private_endpoints ? [] : distinct([var.agent_ip, replace(replace(var.client_ip.cidr, "/31", ""), "/32", "")])
+
+    virtual_network_subnet_ids = [
+      var.databricks_private_subnet.id,
+      var.databricks_public_subnet.id
+    ]
   }
 
   identity {
@@ -28,7 +33,7 @@ resource "azurerm_storage_account" "this" {
 resource "azurerm_role_assignment" "service_principal" {
   scope                = azurerm_storage_account.this.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azurerm_client_config.client_config.object_id
+  principal_id         = var.client_config.object_id
 }
 
 resource "azurerm_role_assignment" "databricks_access_connector" {
@@ -85,7 +90,7 @@ resource "azurerm_private_endpoint" "dfs" {
 
 # # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container
 # resource "azurerm_storage_container" "this" {
-#   name                  = "unity-catalog"
+#   name                  = "metastore"
 #   storage_account_name  = azurerm_storage_account.this.name
 #   container_access_type = "private"
 
@@ -98,7 +103,7 @@ resource "azurerm_private_endpoint" "dfs" {
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_data_lake_gen2_filesystem
 resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
-  name               = "unity-catalog"
+  name               = "metastore"
   storage_account_id = azurerm_storage_account.this.id
 
   depends_on = [

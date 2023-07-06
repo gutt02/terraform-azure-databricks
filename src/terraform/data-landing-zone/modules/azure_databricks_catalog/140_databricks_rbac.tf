@@ -18,7 +18,7 @@ resource "databricks_mws_permission_assignment" "ca" {
 
   workspace_id = var.databricks_workspace.workspace_id
   principal_id = databricks_group.da_ca.id
-  permissions  = ["USER"]
+  permissions  = ["ADMIN"]
 
   depends_on = [
     databricks_metastore_assignment.this
@@ -44,30 +44,72 @@ resource "databricks_grants" "metastore" {
     principal  = databricks_group.da_ca.display_name
     privileges = ["CREATE_CATALOG", "CREATE_EXTERNAL_LOCATION", "CREATE_SHARE", "CREATE_RECIPIENT", "CREATE_PROVIDER"]
   }
+  grant {
+    principal  = databricks_group.da_de.display_name
+    privileges = ["CREATE_CATALOG", "CREATE_EXTERNAL_LOCATION", "CREATE_SHARE", "CREATE_RECIPIENT", "CREATE_PROVIDER"]
+  }
+
+  depends_on = [
+    databricks_mws_permission_assignment.ca,
+    databricks_mws_permission_assignment.de
+  ]
 }
 
 resource "databricks_grants" "catalog" {
   catalog = databricks_catalog.this.name
   grant {
     principal  = databricks_group.da_ca.display_name
-    privileges = ["USE_CATALOG", "USE_SCHEMA", "CREATE_SCHEMA", "CREATE_TABLE", "MODIFY"]
+    # privileges = ["CREATE_SCHEMA", "USE_CATALOG", "CREATE_FUNCTION", "CREATE_TABLE", "EXECUTE", "MODIFY", "REFRESH", "SELECT", "USE_SCHEMA"]
+    privileges = ["ALL_PRIVILEGES"]
   }
   grant {
     principal  = databricks_group.da_de.display_name
-    privileges = ["USE_CATALOG", "USE_SCHEMA", "CREATE_SCHEMA", "CREATE_TABLE", "MODIFY"]
+    # privileges = ["CREATE_SCHEMA", "USE_CATALOG", "CREATE_FUNCTION", "CREATE_TABLE", "EXECUTE", "MODIFY", "REFRESH", "SELECT", "USE_SCHEMA"]
+    privileges = ["ALL_PRIVILEGES"]
   }
+
+  depends_on = [
+    databricks_mws_permission_assignment.ca,
+    databricks_mws_permission_assignment.de
+  ]
+}
+
+resource "databricks_grants" "schema" {
+  schema = databricks_schema.this.id
+  grant {
+    principal  = databricks_group.da_ca.display_name
+    # privileges = ["CREATE_FUNCTION", "CREATE_TABLE", "EXECUTE", "MODIFY", "REFRESH", "SELECT"]
+    privileges = ["ALL_PRIVILEGES"]
+  }
+  grant {
+    principal  = databricks_group.da_de.display_name
+    # privileges = ["CREATE_FUNCTION", "CREATE_TABLE", "EXECUTE", "MODIFY", "REFRESH", "SELECT"]
+    privileges = ["ALL_PRIVILEGES"]
+  }
+
+  depends_on = [
+    databricks_mws_permission_assignment.ca,
+    databricks_mws_permission_assignment.de
+  ]
 }
 
 resource "databricks_grants" "storage_credential" {
   storage_credential = databricks_storage_credential.this.id
   grant {
     principal  = databricks_group.da_ca.display_name
+    # privileges = ["CREATE_EXTERNAL_TABLE", "READ_FILES", "WRITE_FILES"]
     privileges = ["ALL_PRIVILEGES"]
   }
   grant {
     principal  = databricks_group.da_de.display_name
+    # privileges = ["CREATE_EXTERNAL_TABLE", "READ_FILES", "WRITE_FILES"]
     privileges = ["ALL_PRIVILEGES"]
   }
+
+  depends_on = [
+    databricks_mws_permission_assignment.ca,
+    databricks_mws_permission_assignment.de
+  ]
 }
 
 resource "databricks_grants" "external_location" {
@@ -75,12 +117,19 @@ resource "databricks_grants" "external_location" {
 
   grant {
     principal  = databricks_group.da_ca.display_name
+    # privileges = ["CREATE_EXTERNAL_TABLE", "CREATE_MANAGED_STORAGE", "READ_FILES", "WRITE_FILES"]
     privileges = ["ALL_PRIVILEGES"]
   }
   grant {
     principal  = databricks_group.da_de.display_name
+    # privileges = ["CREATE_EXTERNAL_TABLE", "CREATE_MANAGED_STORAGE", "READ_FILES", "WRITE_FILES"]
     privileges = ["ALL_PRIVILEGES"]
   }
+
+  depends_on = [
+    databricks_mws_permission_assignment.ca,
+    databricks_mws_permission_assignment.de
+  ]
 }
 
 # # https://registry.terraform.io/providers/databricks/databricks/latest/docs/data-sources/user

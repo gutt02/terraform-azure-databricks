@@ -1,3 +1,13 @@
+variable "client_config" {
+  type        = any
+  description = "Configuration of the AzureRM provider."
+}
+
+variable "subscription" {
+  type        = any
+  description = "Information about an existing Subscription."
+}
+
 variable "agent_ip" {
   type        = string
   description = "IP of the deployment agent."
@@ -28,6 +38,16 @@ variable "connectivity_landing_zone_private_dns_zone_blob" {
 variable "connectivity_landing_zone_private_dns_zone_dfs" {
   type        = any
   description = "The private dns zone for Data Lake File system in the connectivity subscription."
+}
+
+variable "databricks_private_subnet" {
+  type        = any
+  description = "The databricks private subnet."
+}
+
+variable "databricks_public_subnet" {
+  type        = any
+  description = "The databricks public subnet."
 }
 
 variable "databricks_workspace" {

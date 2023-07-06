@@ -1,3 +1,13 @@
+variable "client_config" {
+  type        = any
+  description = "Configuration of the AzureRM provider."
+}
+
+variable "subscription" {
+  type        = any
+  description = "Information about an existing Subscription."
+}
+
 variable "agent_ip" {
   type        = string
   description = "IP of the deployment agent."
@@ -58,6 +68,11 @@ variable "global_settings" {
 variable "location" {
   type        = string
   description = "Default Azure region, use Azure CLI notation."
+}
+
+variable "private_dns_zone_azuredatabricks" {
+  type        = any
+  description = "The private dns zone for Azure Databricks."
 }
 
 variable "private_endpoints_subnet" {
