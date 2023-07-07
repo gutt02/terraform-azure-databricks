@@ -72,8 +72,12 @@ variable "location" {
 
 variable "metastore_name" {
   type        = string
-  default     = "metastore-euw"
   description = "Name of the Databricks Metastore."
+}
+
+variable "metastore_owner" {
+  type        = string
+  description = "Owner of the Databricks Metastore."
 }
 
 variable "private_endpoints_subnet" {

@@ -1,9 +1,9 @@
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/metastore
 resource "databricks_metastore" "this" {
-  name  = "metastore-euw"
-  owner = var.client_config.client_id
+  name  = var.metastore_name
+  owner = var.metastore_owner
   storage_root = format("abfss://%s@%s.dfs.core.windows.net/",
-    azurerm_storage_data_lake_gen2_filesystem.this.name,
+    azurerm_storage_container.this.name,
   azurerm_storage_account.this.name)
   force_destroy = true
 

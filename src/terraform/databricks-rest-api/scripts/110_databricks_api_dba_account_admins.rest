@@ -1,0 +1,89 @@
+### https://docs.databricks.com/dev-tools/api/latest/index.html
+### https://learn.microsoft.com/en-us/azure/databricks/dev-tools/api/latest/aad/service-prin-aad-token#get-token-azure-cli
+
+### Note: First create the managed Databricks workspace!
+### Use the script 000_generate_token.sh to generate a Databricks access token. You must be an Admin Account
+
+@account_id = ********-****-****-****-************
+@databricks_instance = adb-****************.*.azuredatabricks.net
+@token = 
+
+@databricks_account_admins_group_name = <ADD Group Name>
+@databricks_account_admins_group_id = <Databricks Account Group Id>
+@service_principal_name = <Service Principal Name>
+@service_principal_id = <Databricks Account Service Principal Id>
+
+################################################################
+###
+### Get Groups
+###
+################################################################
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+################################################################
+###
+### Get Service Principals
+###
+################################################################
+GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+################################################################
+###
+### Add group
+###
+################################################################
+POST https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "displayName": "{{databricks_account_admins_group_name}}",
+  "schemas": [
+    "urn:ietf:params:scim:schemas:core:2.0:Group"
+  ],
+  "members": [
+    {
+      "display": "{{service_principal_name}}",
+      "value": "{{service_principal_id}}"
+    }
+  ]
+}
+
+################################################################
+###
+### Delete group
+###
+################################################################
+DELETE https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{databricks_account_admins_group_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+################################################################
+###
+### Assign role account_admin
+###
+################################################################
+PATCH https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups/{{databricks_account_admins_group_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+  ],
+  "Operations": [
+    {
+      "op": "replace",
+      "path": "roles",
+      "value": [
+        {
+          "value": "account_admin"
+        }
+      ]
+    }
+  ]
+}

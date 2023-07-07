@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.58.0"
+      version = "~> 3.62.0"
     }
 
     azurecaf = {
@@ -121,6 +121,7 @@ module "azure_databricks_metastore" {
   global_settings                                 = var.global_settings
   location                                        = var.location
   metastore_name                                  = var.metastore_name
+  metastore_owner                                 = var.metastore_owner
   private_endpoints_subnet                        = module.shared.private_endpoints_subnet
 
   depends_on = [module.azure_databricks_workspace]

@@ -37,7 +37,7 @@ resource "azurerm_role_assignment" "service_principal" {
 }
 
 resource "azurerm_role_assignment" "databricks_access_connector" {
-  for_each = toset(["Contributor", "Storage Blob Data Contributor"])
+  for_each = toset(["Storage Blob Data Contributor"])
 
   scope                = azurerm_storage_account.this.id
   role_definition_name = each.key
@@ -88,23 +88,11 @@ resource "azurerm_private_endpoint" "dfs" {
   }
 }
 
-# # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container
-# resource "azurerm_storage_container" "this" {
-#   name                  = "metastore"
-#   storage_account_name  = azurerm_storage_account.this.name
-#   container_access_type = "private"
-
-#   depends_on = [
-#     azurerm_private_endpoint.blob,
-#     azurerm_private_endpoint.dfs,
-#     azurerm_role_assignment.service_principal
-#   ]
-# }
-
-# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_data_lake_gen2_filesystem
-resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
-  name               = "metastore"
-  storage_account_id = azurerm_storage_account.this.id
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container
+resource "azurerm_storage_container" "this" {
+  name                  = "metastore"
+  storage_account_name  = azurerm_storage_account.this.name
+  container_access_type = "private"
 
   depends_on = [
     azurerm_private_endpoint.blob,
@@ -112,3 +100,16 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
     azurerm_role_assignment.service_principal
   ]
 }
+
+# # Note: This does not work with Private Endpoints, sic!
+# # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_data_lake_gen2_filesystem
+# resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
+#   name               = "metastore"
+#   storage_account_id = azurerm_storage_account.this.id
+
+#   depends_on = [
+#     azurerm_private_endpoint.blob,
+#     azurerm_private_endpoint.dfs,
+#     azurerm_role_assignment.service_principal
+#   ]
+# }

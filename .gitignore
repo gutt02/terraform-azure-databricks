@@ -40,6 +40,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Local .local. directories
+**/.local/*
+
 # Local .local. files
 **/*.local.*
 

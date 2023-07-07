@@ -75,6 +75,11 @@ variable "metastore_name" {
   description = "Name of the Databricks Metastore."
 }
 
+variable "metastore_owner" {
+  type        = string
+  description = "Owner of the Databricks Metastore."
+}
+
 variable "tags" {
   type = object({
     created_by  = string
