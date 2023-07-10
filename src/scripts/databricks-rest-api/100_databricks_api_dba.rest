@@ -13,8 +13,8 @@
 @databricks_instance = adb-****************.*.azuredatabricks.net
 @token = 
 @catalog_name = <Catalog Name>
-@external_location = <External Location Name>
-@storage_credential = <Storage Credential Name>
+@external_location_name = <External Location Name>
+@storage_credential_name = <Storage Credential Name>
 
 ################################################################
 ###
@@ -84,7 +84,7 @@ Authorization: Bearer {{token}}
 ### Delete external location
 ###
 ################################################################
-DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations/{{external_location}}?force=true HTTP/1.1
+DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations/{{external_location_name}}?force=true HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -102,6 +102,6 @@ Authorization: Bearer {{token}}
 ### Delete storage credential
 ###
 ################################################################
-DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials/{{storage_credential}}?force=true HTTP/1.1
+DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials/{{storage_credential_name}}?force=true HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
