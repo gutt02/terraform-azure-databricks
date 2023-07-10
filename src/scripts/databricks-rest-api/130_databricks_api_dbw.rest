@@ -4,17 +4,22 @@
 ### Note: First create the managed Databricks workspace!
 ### Use the script 000_generate_token.sh to generate a Databricks access token. You must be an Admin Account
 
+################################################################
+###
+### Variables
+###
+################################################################
 @account_id = ********-****-****-****-************
 @databricks_instance = adb-****************.*.azuredatabricks.net
 @token = 
 
-@dbw_user_id = <Databricks User Id>
-@dbw_group_id = <Databricks Group Id>
-@dbw_service_principal = <Databricks Service Principal Id>
+@user_id = <Databricks User Id>
+@group_id = <Databricks Group Id>
+@service_principal_id = <Databricks Service Principal Id>
 
 ################################################################
 ###
-### Get Users
+### Get users
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Users HTTP/1.1
@@ -23,16 +28,16 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Users details
+### Get users details
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Users/{{dbw_user_id}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Users/{{user_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Groups
+### Get groups
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Groups HTTP/1.1
@@ -41,16 +46,16 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Group details
+### Get group details
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Groups/{{dbw_group_id}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/Groups/{{group_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Service Principals
+### Get service principals
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/ServicePrincipals HTTP/1.1
@@ -59,9 +64,9 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Service Principal details
+### Get service principal details
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/ServicePrincipals/{{dbw_service_principal}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.0/preview/scim/v2/ServicePrincipals/{{service_principal_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}

@@ -4,6 +4,11 @@
 ### Note: First create the managed Databricks workspace!
 ### Use the script 000_generate_token.sh to generate a Databricks access token. You must be an Admin Account
 
+################################################################
+###
+### Variables
+###
+################################################################
 @account_id = ********-****-****-****-************
 @databricks_instance = adb-****************.*.azuredatabricks.net
 @token = 
@@ -15,7 +20,7 @@
 
 ################################################################
 ###
-### Get Groups
+### Get groups
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups HTTP/1.1
@@ -24,7 +29,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Service Principals
+### Get service principals
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals HTTP/1.1

@@ -5,26 +5,37 @@
 ### Use the script 000_generate_token.sh to generate a Databricks access token. You must be an Admin Account
 ### Important: Use the Databricks Workspace which was assigned to the Metastore!
 
+################################################################
+###
+### Variables
+###
+################################################################
 @account_id = ********-****-****-****-************
 @databricks_instance = adb-****************.*.azuredatabricks.net
 @token = 
 
 @databricks_catalog_admins_group_name = <AAD Group Name>
 @databricks_catalog_admins_group_id = <AAD Object ID>
-@securable_type_metastore = metastore
-@full_name_metastore = <Databricks Account Metastore GUID>
-@securable_type_catalog = catalog
-@full_name_catalog = <Catalog Name>
-@securable_type_schema = schema
-@full_name_schema = {{full_name_catalog}}.<Schema Name>
-@securable_type_storage_credential = storage_credential
-@full_name_storage_credential = <Storage Credential Name>
-@securable_type_external_location = external_location
-@full_name_external_location = <External Location Name>
+@metastore_id = <Databricks Account Metastore GUID>
+@catalog_name = <Catalog Name>
+@schema_name = {{catalog_name}}.<Schema Name>
+@storage_credential_name = <Storage Credential Name>
+@external_location_name = <External Location Name>
 
 ################################################################
 ###
-### Get Groups
+### Constants
+###
+################################################################
+@securable_type_metastore = metastore
+@securable_type_catalog = catalog
+@securable_type_schema = schema
+@securable_type_storage_credential = storage_credential
+@securable_type_external_location = external_location
+
+################################################################
+###
+### Get groups
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups HTTP/1.1
@@ -64,10 +75,10 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Grant permissions on Metastore
+### Grant permissions on metastore
 ###
 ################################################################
-PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_metastore}}/{{full_name_metastore}} HTTP/1.1
+PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_metastore}}/{{metastore_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -88,10 +99,10 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get permissions on Metastore
+### Get permissions on metastore
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_metastore}}/{{full_name_metastore}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_metastore}}/{{metastore_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -100,7 +111,7 @@ Authorization: Bearer {{token}}
 ### Grant permssions on Catalog
 ###
 ################################################################
-PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_catalog}}/{{full_name_catalog}} HTTP/1.1
+PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_catalog}}/{{catalog_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -120,7 +131,7 @@ Authorization: Bearer {{token}}
 ### Get permissions on Catalog
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_catalog}}/{{full_name_catalog}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_catalog}}/{{catalog_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -129,7 +140,7 @@ Authorization: Bearer {{token}}
 ### Grant permissions on Schema
 ###
 ################################################################
-PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_schema}}/{{full_name_schema}} HTTP/1.1
+PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_schema}}/{{schema_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -147,7 +158,7 @@ Authorization: Bearer {{token}}
 ### Get permissions on Schema
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_schema}}/{{full_name_schema}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_schema}}/{{schema_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -156,7 +167,7 @@ Authorization: Bearer {{token}}
 ### Grant permission on Storage Credential
 ###
 ################################################################
-PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_storage_credential}}/{{full_name_storage_credential}} HTTP/1.1
+PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_storage_credential}}/{{storage_credential_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -174,7 +185,7 @@ Authorization: Bearer {{token}}
 ### Get permissions on Storage Credential
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_storage_credential}}/{{full_name_storage_credential}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_storage_credential}}/{{storage_credential_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -183,7 +194,7 @@ Authorization: Bearer {{token}}
 ### Grant permissions on External Location
 ###
 ################################################################
-PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_external_location}}/{{full_name_external_location}} HTTP/1.1
+PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_external_location}}/{{external_location_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -201,6 +212,6 @@ Authorization: Bearer {{token}}
 ### Get permissions on External Location
 ###
 ################################################################
-GET https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_external_location}}/{{full_name_external_location}} HTTP/1.1
+GET https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_external_location}}/{{external_location_name}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}

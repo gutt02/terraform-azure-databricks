@@ -4,6 +4,11 @@
 ### Note: First create the managed Databricks workspace!
 ### Use the script 000_generate_token.sh to generate a Databricks access token. You must be an Admin Account
 
+################################################################
+###
+### Variables
+###
+################################################################
 @account_id = ********-****-****-****-************
 @databricks_instance = adb-****************.*.azuredatabricks.net
 @token = 
@@ -13,7 +18,7 @@
 
 ################################################################
 ###
-### Get Users
+### Get users
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Users HTTP/1.1
@@ -22,7 +27,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Groups
+### Get groups
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/account/scim/v2/Groups HTTP/1.1
@@ -31,7 +36,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Service Principals
+### Get service principals
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.0/account/scim/v2/ServicePrincipals HTTP/1.1
@@ -40,7 +45,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Metastores
+### Get metastores
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/metastores HTTP/1.1
@@ -49,7 +54,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Catalogs
+### Get catalogs
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/catalogs HTTP/1.1
@@ -58,7 +63,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Catalog details
+### Get catalog details
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/catalogs/{{catalog_name}} HTTP/1.1
@@ -67,7 +72,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get External locations
+### Get external locations
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations HTTP/1.1
@@ -76,7 +81,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Delete External Location
+### Delete external location
 ###
 ################################################################
 DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/external-locations/{{external_location}}?force=true HTTP/1.1
@@ -85,7 +90,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get Storage Credentials
+### Get storage credentials
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials HTTP/1.1
@@ -94,7 +99,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Delete Storage Credential
+### Delete storage credential
 ###
 ################################################################
 DELETE https://{{databricks_instance}}/api/2.1/unity-catalog/storage-credentials/{{storage_credential}}?force=true HTTP/1.1
