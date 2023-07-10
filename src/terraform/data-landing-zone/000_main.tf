@@ -130,6 +130,7 @@ module "azure_databricks_catalog" {
   databricks_metastore_id                         = var.databricks_metastore_id
   databricks_private_subnet                       = module.shared.databricks_private_subnet
   databricks_public_subnet                        = module.shared.databricks_public_subnet
+  databricks_serverless_sql_subnets               = var.databricks_serverless_sql_subnets
   databricks_workspace                            = module.azure_databricks_workspace.databricks_workspace
   enable_private_endpoints                        = var.enable_private_endpoints
   global_settings                                 = var.global_settings

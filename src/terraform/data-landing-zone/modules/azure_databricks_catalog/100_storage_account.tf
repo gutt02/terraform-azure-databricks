@@ -19,10 +19,7 @@ resource "azurerm_storage_account" "this" {
     default_action = "Deny"
     ip_rules       = var.enable_private_endpoints ? [] : distinct([var.agent_ip, replace(replace(var.client_ip.cidr, "/31", ""), "/32", "")])
 
-    virtual_network_subnet_ids = [
-      var.databricks_private_subnet.id,
-      var.databricks_public_subnet.id
-    ]
+    virtual_network_subnet_ids = concat([var.databricks_private_subnet.id, var.databricks_public_subnet.id], coalesce(var.databricks_serverless_sql_subnets, []))
   }
 
   identity {

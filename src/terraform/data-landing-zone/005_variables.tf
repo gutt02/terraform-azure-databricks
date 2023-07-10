@@ -50,6 +50,26 @@ variable "databricks_metastore_id" {
   description = "The Databricks Metastore Id."
 }
 
+# https://learn.microsoft.com/en-us/azure/databricks/sql/admin/serverless-firewall
+# https://learn.microsoft.com/en-us/azure/databricks/resources/supported-regions#serverless-sql-subnets
+variable "databricks_serverless_sql_subnets" {
+  type = list(string)
+  default = [
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos3/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos4/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos5/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos6/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos7/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos2/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos3/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos4/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos5/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
+    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos6/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet"
+  ]
+
+  description = "Subnets for Databricks Serverless SQL, leave empty if not required."
+}
+
 variable "enable_catalog" {
   type        = bool
   default     = false

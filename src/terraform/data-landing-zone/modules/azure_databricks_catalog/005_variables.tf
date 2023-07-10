@@ -55,6 +55,13 @@ variable "databricks_public_subnet" {
   description = "The databricks public subnet."
 }
 
+# https://learn.microsoft.com/en-us/azure/databricks/sql/admin/serverless-firewall
+# https://learn.microsoft.com/en-us/azure/databricks/resources/supported-regions#serverless-sql-subnets
+variable "databricks_serverless_sql_subnets" {
+  type        = list(string)
+  description = "Subnets for Databricks Serverless SQL, leave empty if not required."
+}
+
 variable "databricks_workspace" {
   type        = any
   description = "The Azure Databricks workspace."
