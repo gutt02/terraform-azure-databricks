@@ -108,7 +108,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Grant permssions on Catalog
+### Grant permssions on catalog
 ###
 ################################################################
 PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_catalog}}/{{catalog_name}} HTTP/1.1
@@ -128,7 +128,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get permissions on Catalog
+### Get permissions on catalog
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_catalog}}/{{catalog_name}} HTTP/1.1
@@ -137,7 +137,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Grant permissions on Schema
+### Grant permissions on schema
 ###
 ################################################################
 PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_schema}}/{{schema_name}} HTTP/1.1
@@ -155,7 +155,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get permissions on Schema
+### Get permissions on schema
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/effective-permissions/{{securable_type_schema}}/{{schema_name}} HTTP/1.1
@@ -164,7 +164,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Grant permission on Storage Credential
+### Grant permission on storage credential
 ###
 ################################################################
 PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_storage_credential}}/{{storage_credential_name}} HTTP/1.1
@@ -182,7 +182,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get permissions on Storage Credential
+### Get permissions on storage credential
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_storage_credential}}/{{storage_credential_name}} HTTP/1.1
@@ -191,7 +191,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Grant permissions on External Location
+### Grant permissions on external location
 ###
 ################################################################
 PATCH https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_external_location}}/{{external_location_name}} HTTP/1.1
@@ -209,7 +209,7 @@ Authorization: Bearer {{token}}
 
 ################################################################
 ###
-### Get permissions on External Location
+### Get permissions on external location
 ###
 ################################################################
 GET https://{{databricks_instance}}/api/2.1/unity-catalog/permissions/{{securable_type_external_location}}/{{external_location_name}} HTTP/1.1
