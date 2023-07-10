@@ -258,7 +258,154 @@ output "virtual_network_id" {
 
 ### Variables
 
+```hcl
+variable "client_config" {
+  type        = any
+  description = "Configuration of the AzureRM provider."
+}
+```
+
+```hcl
+variable "subscription" {
+  type        = any
+  description = "Information about an existing Subscription."
+}
+```
+
+```hcl
+# curl ipinfo.io/ip
+variable "agent_ip" {
+  type        = string
+  description = "IP of the deployment agent."
+}
+```
+
+```hcl
+variable "client_ip" {
+  type = object({
+    name             = string
+    cidr             = string
+    start_ip_address = string
+    end_ip_address   = string
+  })
+
+  description = "Client IP."
+}
+```
+
+```hcl
+variable "client_secret" {
+  type        = string
+  sensitive   = true
+  description = "Client secret of the service principal."
+}
+```
+
+```hcl
+variable "global_settings" {
+  type        = any
+  description = "Global settings."
+}
+```
+
+```hcl
+variable "location" {
+  type        = string
+  description = "Default Azure region, use Azure CLI notation."
+}
+```
+
+```hcl
+variable "on_premises_networks" {
+  type = list(object({
+    name             = string
+    cidr             = string
+    start_ip_address = string
+    end_ip_address   = string
+  }))
+
+  description = "List of on premises networks."
+}
+```
+
+```hcl
+variable "private_dns_zones" {
+  type        = map(string)
+  description = "Map of private DNS zones."
+}
+```
+
+```hcl
+variable "tags" {
+  type = object({
+    created_by  = string
+    contact     = string
+    customer    = string
+    environment = string
+    project     = string
+  })
+
+  description = "Default tags for resources, only applied to resource groups."
+}
+```
+
+```hcl
+variable "virtual_network" {
+  type = object({
+    address_space = string
+
+    subnets = map(object({
+      address_space       = string
+      client_address_pool = optional(string)
+      description         = optional(string)
+    }))
+  })
+
+  description = "VNET details."
+}
+```
+
 ### Output
+
+```hcl
+output "dns_private_resolver_inbound_subnet_id" {
+  value = azurerm_subnet.dns_private_resolver_inbound.id
+}
+```
+
+```hcl
+output "dns_private_resolver_outbound_subnet_id" {
+  value = azurerm_subnet.dns_private_resolver_outbound.id
+}
+```
+
+```hcl
+output "gateway_subnet_id" {
+  value = azurerm_subnet.gateway.id
+}
+```
+
+```hcl
+output "private_dns_zone_ids" {
+  value = tomap({
+    for private_dns_zone_key, private_dns_zone_name in var.private_dns_zones : private_dns_zone_key => {
+      id = azurerm_private_dns_zone.this[private_dns_zone_key].id
+    }
+  })
+}
+```
+
+```hcl
+output "private_endpoints_subnet_id" {
+  value = azurerm_subnet.private_endpoints.id
+}
+```
+
+```hcl
+output "virtual_network_id" {
+  value = azurerm_virtual_network.this.id
+}
+```
 
 ## Module DNS Private Resolver
 

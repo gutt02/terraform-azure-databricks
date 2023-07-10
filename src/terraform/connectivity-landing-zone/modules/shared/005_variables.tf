@@ -32,16 +32,12 @@ variable "client_secret" {
 }
 
 variable "global_settings" {
-  default = {
-    azurecaf_name = {
-      prefixes = ["az", "cf", "clz"]
-    }
-  }
+  type        = any
+  description = "Global settings."
 }
 
 variable "location" {
   type        = string
-  default     = "westeurope"
   description = "Default Azure region, use Azure CLI notation."
 }
 
@@ -53,27 +49,11 @@ variable "on_premises_networks" {
     end_ip_address   = string
   }))
 
-  default = [
-    {
-      name             = "AllowFromOnPremises1"
-      cidr             = "10.0.0.0/24"
-      start_ip_address = "10.0.0.0"
-      end_ip_address   = "10.0.0.255"
-    }
-  ]
-
   description = "List of on premises networks."
 }
 
 variable "private_dns_zones" {
-  type = map(string)
-
-  default = {
-    dns_zone_azuredatabricks = "privatelink.azuredatabricks.net"
-    dns_zone_blob            = "privatelink.blob.core.windows.net"
-    dns_zone_dfs             = "privatelink.dfs.core.windows.net"
-  }
-
+  type        = map(string)
   description = "Map of private DNS zones."
 }
 
@@ -86,17 +66,8 @@ variable "tags" {
     project     = string
   })
 
-  default = {
-    created_by  = "azc-iac-acf-sp-tf"
-    contact     = "contact@me"
-    customer    = "Azure"
-    environment = "Cloud Foundation"
-    project     = "Connectivity Landing Zone"
-  }
-
   description = "Default tags for resources, only applied to resource groups."
 }
-
 
 variable "virtual_network" {
   type = object({
