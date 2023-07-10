@@ -342,7 +342,7 @@ output "virtual_network" {
 }
 ```
 
-## Module Azure Databricks Workapce
+## Module Azure Databricks Workspace
 
 ### Azure Resources
 
