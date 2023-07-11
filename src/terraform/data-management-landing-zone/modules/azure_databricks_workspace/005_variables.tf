@@ -75,6 +75,11 @@ variable "private_endpoints_subnet" {
   description = "The private endpoints subnet."
 }
 
+variable "resource_group" {
+  type        = any
+  description = "Resource group."
+}
+
 variable "tags" {
   type = object({
     created_by  = string

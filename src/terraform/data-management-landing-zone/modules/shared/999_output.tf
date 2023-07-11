@@ -18,6 +18,10 @@ output "private_endpoints_subnet" {
   value = azurerm_subnet.private_endpoints
 }
 
+output "resource_group" {
+  value = azurerm_resource_group.this
+}
+
 output "virtual_network" {
   value = azurerm_virtual_network.this
 }

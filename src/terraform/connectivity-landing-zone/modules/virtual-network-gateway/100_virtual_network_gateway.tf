@@ -16,7 +16,7 @@ data "local_sensitive_file" "this" {
 resource "azurerm_public_ip" "this" {
   name                = "${azurecaf_name.this.result}-pip"
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.this.name
+  resource_group_name = var.resource_group.name
   allocation_method   = "Dynamic"
 }
 
@@ -24,7 +24,7 @@ resource "azurerm_public_ip" "this" {
 resource "azurerm_virtual_network_gateway" "this" {
   name                = azurecaf_name.this.result
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.this.name
+  resource_group_name = var.resource_group.name
   type                = var.virtual_network_gateway.type
   vpn_type            = var.virtual_network_gateway.vpn_type
   active_active       = var.virtual_network_gateway.active_active

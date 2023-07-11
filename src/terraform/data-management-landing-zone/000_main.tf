@@ -66,6 +66,7 @@ module "shared" {
   connectivity_landing_zone_virtual_network = data.azurerm_virtual_network.connectivity_landing_zone
   global_settings                           = var.global_settings
   location                                  = var.location
+  resource_group                            = null
   tags                                      = var.tags
   use_remote_gateways                       = var.use_remote_gateways
   virtual_network                           = var.virtual_network
@@ -92,6 +93,7 @@ module "azure_databricks_workspace" {
   global_settings                                            = var.global_settings
   location                                                   = var.location
   private_endpoints_subnet                                   = module.shared.private_endpoints_subnet
+  resource_group                                             = null
   tags                                                       = var.tags
   virtual_network                                            = module.shared.virtual_network
 
@@ -123,6 +125,7 @@ module "azure_databricks_metastore" {
   metastore_name                                  = var.metastore_name
   metastore_owner                                 = var.metastore_owner
   private_endpoints_subnet                        = module.shared.private_endpoints_subnet
+  resource_group                                  = module.azure_databricks_workspace.resource_group
 
   depends_on = [module.azure_databricks_workspace]
 }

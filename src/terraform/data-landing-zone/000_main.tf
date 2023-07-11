@@ -78,6 +78,7 @@ module "shared" {
   global_settings                           = var.global_settings
   location                                  = var.location
   private_dns_zones                         = var.private_dns_zones
+  resource_group                            = null
   tags                                      = var.tags
   use_remote_gateways                       = var.use_remote_gateways
   virtual_network                           = var.virtual_network
@@ -106,6 +107,7 @@ module "azure_databricks_workspace" {
   private_dns_zone_azuredatabricks                           = module.shared.private_dns_zones["dns_zone_azuredatabricks"]
   private_endpoints_subnet                                   = module.shared.private_endpoints_subnet
   tags                                                       = var.tags
+  resource_group                                             = null
   virtual_network                                            = module.shared.virtual_network
 
   depends_on = [module.shared]
@@ -137,6 +139,7 @@ module "azure_databricks_catalog" {
   global_settings                                 = var.global_settings
   location                                        = var.location
   private_endpoints_subnet                        = module.shared.private_endpoints_subnet
+  resource_group                                  = module.azure_databricks_workspace.resource_group
   tags                                            = var.tags
 
   depends_on = [module.azure_databricks_workspace]

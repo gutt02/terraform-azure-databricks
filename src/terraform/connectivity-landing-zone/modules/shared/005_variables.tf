@@ -57,6 +57,11 @@ variable "private_dns_zones" {
   description = "Map of private DNS zones."
 }
 
+variable "resource_group" {
+  type        = any
+  description = "Resource group."
+}
+
 variable "tags" {
   type = object({
     created_by  = string

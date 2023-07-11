@@ -9,7 +9,7 @@ resource "azurecaf_name" "storage_account" {
 resource "azurerm_storage_account" "this" {
   name                     = azurecaf_name.storage_account.result
   location                 = var.location
-  resource_group_name      = var.databricks_workspace.resource_group_name
+  resource_group_name      = var.resource_group.name
   account_tier             = "Standard"
   account_replication_type = "GRS"
   is_hns_enabled           = true
@@ -51,7 +51,7 @@ resource "azurerm_private_endpoint" "blob" {
 
   name                = "${azurerm_storage_account.this.name}-pe-blob"
   location            = var.location
-  resource_group_name = var.databricks_workspace.resource_group_name
+  resource_group_name = var.resource_group.name
   subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {
@@ -72,7 +72,7 @@ resource "azurerm_private_endpoint" "dfs" {
 
   name                = "${azurerm_storage_account.this.name}-pe-dfs"
   location            = var.location
-  resource_group_name = var.databricks_workspace.resource_group_name
+  resource_group_name = var.resource_group.name
   subnet_id           = var.private_endpoints_subnet.id
 
   private_dns_zone_group {

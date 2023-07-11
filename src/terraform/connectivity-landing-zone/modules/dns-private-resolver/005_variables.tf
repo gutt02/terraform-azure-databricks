@@ -27,3 +27,8 @@ variable "dns_private_resolver_outbound_subnet_id" {
   type        = string
   description = "Id of the outbound subnet for the DNS Private Resolver."
 }
+
+variable "resource_group" {
+  type        = any
+  description = "Resource group."
+}

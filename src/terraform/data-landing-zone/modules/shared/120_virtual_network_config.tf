@@ -11,7 +11,7 @@ resource "azurerm_network_security_rule" "databricks_private" {
   destination_port_range      = "443"
   source_address_prefix       = "VirtualNetwork"
   destination_address_prefix  = "AzureDatabricks"
-  resource_group_name         = azurerm_resource_group.this.name
+  resource_group_name         = local.resource_group.name
   network_security_group_name = azurerm_network_security_group.databricks_private.name
   description                 = "Required for workers communication with Databricks Webapp."
 }
@@ -28,7 +28,7 @@ resource "azurerm_network_security_rule" "databricks_public" {
   destination_port_range      = "443"
   source_address_prefix       = "VirtualNetwork"
   destination_address_prefix  = "AzureDatabricks"
-  resource_group_name         = azurerm_resource_group.this.name
+  resource_group_name         = local.resource_group.name
   network_security_group_name = azurerm_network_security_group.databricks_public.name
   description                 = "Required for workers communication with Databricks Webapp."
 }

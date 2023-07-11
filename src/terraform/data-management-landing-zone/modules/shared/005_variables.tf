@@ -45,6 +45,11 @@ variable "location" {
   description = "Default Azure region, use Azure CLI notation."
 }
 
+variable "resource_group" {
+  type        = any
+  description = "Resource group."
+}
+
 variable "tags" {
   type = object({
     created_by  = string

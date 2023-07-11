@@ -9,7 +9,7 @@ resource "azurecaf_name" "dbw" {
 resource "azurerm_databricks_workspace" "this" {
   name                = azurecaf_name.dbw.result
   location            = var.location
-  resource_group_name = azurerm_resource_group.this.name
+  resource_group_name = local.resource_group.name
 
   custom_parameters {
     no_public_ip                                         = var.enable_private_endpoints ? true : false
@@ -21,7 +21,7 @@ resource "azurerm_databricks_workspace" "this" {
     virtual_network_id                                   = var.virtual_network.id
   }
 
-  managed_resource_group_name           = "${azurerm_resource_group.this.name}-managed"
+  managed_resource_group_name           = "${local.resource_group.name}-managed"
   network_security_group_rules_required = var.enable_private_endpoints ? "NoAzureDatabricksRules" : null
   public_network_access_enabled         = var.enable_private_endpoints ? false : true
   sku                                   = "premium"

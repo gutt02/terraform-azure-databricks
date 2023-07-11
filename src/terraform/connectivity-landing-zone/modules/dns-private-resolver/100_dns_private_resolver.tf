@@ -15,7 +15,7 @@ resource "azurecaf_name" "dns_private_resolver_inbound_endpoint" {
 resource "azurerm_private_dns_resolver" "this" {
   name                = azurecaf_name.dns_private_resolver.result
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.this.name
+  resource_group_name = var.resource_group.name
   virtual_network_id  = data.azurerm_virtual_network.this.id
 }
 

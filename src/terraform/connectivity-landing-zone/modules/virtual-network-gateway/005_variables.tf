@@ -23,6 +23,11 @@ variable "gateway_subnet_id" {
   description = "Id of the Gateway Subnet."
 }
 
+variable "resource_group" {
+  type        = any
+  description = "Resource group."
+}
+
 variable "virtual_network_gateway" {
   type = object({
     type          = string

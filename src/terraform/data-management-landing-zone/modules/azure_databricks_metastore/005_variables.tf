@@ -60,6 +60,11 @@ variable "enable_private_endpoints" {
   description = "Enable private endpoints."
 }
 
+variable "resource_group" {
+  type        = any
+  description = "Resource group."
+}
+
 variable "global_settings" {
   type        = any
   description = "Global settings."

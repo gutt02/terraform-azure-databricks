@@ -44,6 +44,7 @@ module "shared" {
   location             = var.location
   on_premises_networks = var.on_premises_networks
   private_dns_zones    = var.private_dns_zones
+  resource_group       = null
   tags                 = var.tags
   virtual_network      = var.virtual_network
 }
@@ -59,6 +60,7 @@ module "dns_private_resolver" {
   location                                = var.location
   dns_private_resolver_inbound_subnet_id  = module.shared.dns_private_resolver_inbound_subnet_id
   dns_private_resolver_outbound_subnet_id = module.shared.dns_private_resolver_outbound_subnet_id
+  resource_group                          = module.shared.resource_group
 
   depends_on = [
     module.shared
@@ -75,6 +77,7 @@ module "virtual_network_gateway" {
   global_settings         = var.global_settings
   location                = var.location
   gateway_subnet_id       = module.shared.gateway_subnet_id
+  resource_group          = module.shared.resource_group
   virtual_network_gateway = var.virtual_network_gateway
 
   depends_on = [
