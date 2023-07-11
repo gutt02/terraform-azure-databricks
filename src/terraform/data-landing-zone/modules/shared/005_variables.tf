@@ -35,6 +35,11 @@ variable "connectivity_landing_zone_virtual_network" {
   description = "Virutal Network of of the connectivity landing zone."
 }
 
+variable "enable_private_endpoints" {
+  type        = bool
+  description = "Enable private endpoints."
+}
+
 variable "global_settings" {
   type        = any
   description = "Global settings."

@@ -74,6 +74,7 @@ module "shared" {
   client_ip                                 = var.client_ip
   client_secret                             = var.client_secret
   connectivity_landing_zone_virtual_network = data.azurerm_virtual_network.connectivity_landing_zone
+  enable_private_endpoints                  = var.enable_private_endpoints
   global_settings                           = var.global_settings
   location                                  = var.location
   private_dns_zones                         = var.private_dns_zones

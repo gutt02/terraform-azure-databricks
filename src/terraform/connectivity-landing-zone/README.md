@@ -238,7 +238,11 @@ output "gateway_subnet_id" {
 
 ```hcl
 output "private_dns_zone_ids" {
-  value = module.shared.private_dns_zone_ids
+  value = tomap({
+    for private_dns_zone_key, private_dns_zone_name in var.private_dns_zones : private_dns_zone_key => {
+      id = module.shared.private_dns_zones[private_dns_zone_key].id
+    }
+  })
 }
 ```
 
@@ -386,12 +390,8 @@ output "gateway_subnet_id" {
 ```
 
 ```hcl
-output "private_dns_zone_ids" {
-  value = tomap({
-    for private_dns_zone_key, private_dns_zone_name in var.private_dns_zones : private_dns_zone_key => {
-      id = azurerm_private_dns_zone.this[private_dns_zone_key].id
-    }
-  })
+output "private_dns_zones" {
+  value = azurerm_private_dns_zone.this
 }
 ```
 

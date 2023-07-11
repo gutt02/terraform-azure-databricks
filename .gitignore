@@ -40,6 +40,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Ignore VS code configuraiton
+**/.vscode/*
+
 # Local .local. directories
 **/.local/*
 

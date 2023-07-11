@@ -1,5 +1,7 @@
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule
 resource "azurerm_network_security_rule" "databricks_private" {
+  count = var.enable_private_endpoints ? 1 : 0
+
   name                        = "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-databricks-webapp"
   priority                    = 110
   direction                   = "Outbound"
@@ -15,6 +17,8 @@ resource "azurerm_network_security_rule" "databricks_private" {
 }
 
 resource "azurerm_network_security_rule" "databricks_public" {
+  count = var.enable_private_endpoints ? 1 : 0
+
   name                        = "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-databricks-webapp"
   priority                    = 110
   direction                   = "Outbound"

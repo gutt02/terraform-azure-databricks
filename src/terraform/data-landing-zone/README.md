@@ -231,6 +231,14 @@ variable "virtual_network" {
 }
 ```
 
+### Output
+
+```hcl
+output "databricks_workspace_workspace_url" {
+  value = module.azure_databricks_workspace.databricks_workspace.workspace_url
+}
+```
+
 ## Module Shared
 
 ### Azure Resources
@@ -338,14 +346,8 @@ variable "virtual_network" {
 ### Output
 
 ```hcl
-output "private_endpoints_subnet" {
-  value = azurerm_subnet.private_endpoints
-}
-```
-
-```hcl
-output "databricks_public_subnet" {
-  value = azurerm_subnet.databricks_public
+output "databricks_private_network_security_group_association" {
+  value = azurerm_subnet_network_security_group_association.databricks_private
 }
 ```
 
@@ -362,8 +364,14 @@ output "databricks_public_network_security_group_association" {
 ```
 
 ```hcl
-output "databricks_private_network_security_group_association" {
-  value = azurerm_subnet_network_security_group_association.databricks_private
+output "databricks_public_subnet" {
+  value = azurerm_subnet.databricks_public
+}
+```
+
+```hcl
+output "private_endpoints_subnet" {
+  value = azurerm_subnet.private_endpoints
 }
 ```
 
