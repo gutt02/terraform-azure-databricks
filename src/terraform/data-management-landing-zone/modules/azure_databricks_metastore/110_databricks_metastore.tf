@@ -1,10 +1,16 @@
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_data_lake_gen2_filesystem
+resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
+  name               = var.container_name
+  storage_account_id = var.storage_account.id
+}
+
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/metastore
 resource "databricks_metastore" "this" {
   name  = var.metastore_name
   owner = var.metastore_owner
   storage_root = format("abfss://%s@%s.dfs.core.windows.net/",
-    azurerm_storage_container.this.name,
-  azurerm_storage_account.this.name)
+    azurerm_storage_data_lake_gen2_filesystem.this.name,
+  var.storage_account.name)
   force_destroy = true
 
   lifecycle {

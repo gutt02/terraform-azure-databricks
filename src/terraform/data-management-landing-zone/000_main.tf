@@ -63,7 +63,7 @@ module "shared" {
   agent_ip                                  = var.agent_ip
   client_ip                                 = var.client_ip
   client_secret                             = var.client_secret
-  connectivity_landing_zone_virtual_network = data.azurerm_virtual_network.connectivity_landing_zone
+  connectivity_landing_zone_virtual_network = data.azurerm_virtual_network.this
   global_settings                           = var.global_settings
   location                                  = var.location
   resource_group                            = null
@@ -73,31 +73,55 @@ module "shared" {
 }
 
 module "azure_databricks_workspace" {
-  source = "./modules/azure_databricks_workspace"
+  source = "../common/modules/azure_databricks_workspace"
 
   providers = {
     azurerm.connectivity_landing_zone = azurerm.connectivity_landing_zone
   }
 
-  client_config                                              = data.azurerm_client_config.this
-  subscription                                               = data.azurerm_subscription.this
-  agent_ip                                                   = var.agent_ip
-  client_ip                                                  = var.client_ip
-  client_secret                                              = var.client_secret
-  connectivity_landing_zone_private_dns_zone_azuredatabricks = data.azurerm_private_dns_zone.azuredatabricks
-  databricks_private_network_security_group_association      = module.shared.databricks_private_network_security_group_association
-  databricks_private_subnet                                  = module.shared.databricks_private_subnet
-  databricks_public_network_security_group_association       = module.shared.databricks_public_network_security_group_association
-  databricks_public_subnet                                   = module.shared.databricks_public_subnet
-  enable_private_endpoints                                   = var.enable_private_endpoints
-  global_settings                                            = var.global_settings
-  location                                                   = var.location
-  private_endpoints_subnet                                   = module.shared.private_endpoints_subnet
-  resource_group                                             = null
-  tags                                                       = var.tags
-  virtual_network                                            = module.shared.virtual_network
+  client_config                                         = data.azurerm_client_config.this
+  subscription                                          = data.azurerm_subscription.this
+  agent_ip                                              = var.agent_ip
+  client_ip                                             = var.client_ip
+  client_secret                                         = var.client_secret
+  databricks_private_network_security_group_association = module.shared.databricks_private_network_security_group_association
+  databricks_private_subnet                             = module.shared.databricks_private_subnet
+  databricks_public_network_security_group_association  = module.shared.databricks_public_network_security_group_association
+  databricks_public_subnet                              = module.shared.databricks_public_subnet
+  enable_private_endpoints                              = var.enable_private_endpoints
+  global_settings                                       = var.global_settings
+  location                                              = var.location
+  private_dns_zone_azuredatabricks_backend              = null
+  private_dns_zone_azuredatabricks_frontend             = data.azurerm_private_dns_zone.this["azuredatabricks"]
+  private_endpoints_subnet                              = module.shared.private_endpoints_subnet
+  resource_group                                        = null
+  tags                                                  = var.tags
+  virtual_network                                       = module.shared.virtual_network
 
   depends_on = [module.shared]
+}
+
+module "storage_account_uc" {
+  source = "../common/modules/storage_account"
+
+  count = var.enable_metastore ? 1 : 0
+
+  client_config              = data.azurerm_client_config.this
+  subscription               = data.azurerm_subscription.this
+  agent_ip                   = var.agent_ip
+  client_ip                  = var.client_ip
+  client_secret              = var.client_secret
+  private_dns_zones          = data.azurerm_private_dns_zone.this
+  enable_private_endpoints   = var.enable_private_endpoints
+  global_settings            = var.global_settings
+  location                   = var.location
+  private_endpoints_subnet   = module.shared.private_endpoints_subnet
+  resource_group             = module.azure_databricks_workspace.resource_group
+  storage_account_suffix     = "uc"
+  tags                       = var.tags
+  virtual_network_subnet_ids = [module.shared.databricks_private_subnet.id, module.shared.databricks_public_subnet.id]
+
+  depends_on = [module.azure_databricks_workspace]
 }
 
 module "azure_databricks_metastore" {
@@ -109,23 +133,19 @@ module "azure_databricks_metastore" {
     azurerm.connectivity_landing_zone = azurerm.connectivity_landing_zone
   }
 
-  client_config                                   = data.azurerm_client_config.this
-  subscription                                    = data.azurerm_subscription.this
-  agent_ip                                        = var.agent_ip
-  client_ip                                       = var.client_ip
-  client_secret                                   = var.client_secret
-  connectivity_landing_zone_private_dns_zone_blob = data.azurerm_private_dns_zone.blob
-  connectivity_landing_zone_private_dns_zone_dfs  = data.azurerm_private_dns_zone.dfs
-  databricks_private_subnet                       = module.shared.databricks_private_subnet
-  databricks_public_subnet                        = module.shared.databricks_public_subnet
-  databricks_workspace                            = module.azure_databricks_workspace.databricks_workspace
-  enable_private_endpoints                        = var.enable_private_endpoints
-  global_settings                                 = var.global_settings
-  location                                        = var.location
-  metastore_name                                  = var.metastore_name
-  metastore_owner                                 = var.metastore_owner
-  private_endpoints_subnet                        = module.shared.private_endpoints_subnet
-  resource_group                                  = module.azure_databricks_workspace.resource_group
+  client_config        = data.azurerm_client_config.this
+  subscription         = data.azurerm_subscription.this
+  agent_ip             = var.agent_ip
+  client_ip            = var.client_ip
+  client_secret        = var.client_secret
+  container_name       = var.metastore_container
+  databricks_workspace = module.azure_databricks_workspace.databricks_workspace
+  global_settings      = var.global_settings
+  location             = var.location
+  metastore_name       = var.metastore_name
+  metastore_owner      = var.metastore_owner
+  resource_group       = module.azure_databricks_workspace.resource_group
+  storage_account      = module.storage_account_uc[0].storage_account
 
-  depends_on = [module.azure_databricks_workspace]
+  depends_on = [module.storage_account_uc]
 }

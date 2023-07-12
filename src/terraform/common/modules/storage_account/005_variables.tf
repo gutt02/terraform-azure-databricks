@@ -30,29 +30,13 @@ variable "client_secret" {
   description = "Client secret of the service principal."
 }
 
-variable "catalog_name" {
-  type        = string
-  description = "Name of the catalog."
-}
-
-variable "container_name" {
-  type        = string
-  description = "Name of the storage account container."
-}
-
-variable "databricks_metastore_id" {
-  type        = string
-  description = "The Databricks Metastore Id."
-}
-
-variable "databricks_workspace" {
+variable "private_dns_zones" {
   type        = any
-  description = "The Azure Databricks workspace."
+  description = "The private dns zones for BLOBs, Data Lake File systems, etc."
 }
 
 variable "enable_private_endpoints" {
   type        = bool
-  default     = true
   description = "Enable private endpoints."
 }
 
@@ -63,8 +47,12 @@ variable "global_settings" {
 
 variable "location" {
   type        = string
-  default     = "westeurope"
   description = "Default Azure region, use Azure CLI notation."
+}
+
+variable "private_endpoints_subnet" {
+  type        = any
+  description = "The private endpoints subnet."
 }
 
 variable "resource_group" {
@@ -72,12 +60,24 @@ variable "resource_group" {
   description = "Resource group."
 }
 
-variable "schema_name" {
+variable "storage_account_suffix" {
   type        = string
-  description = "Name of the schema."
+  description = "Suffix of the storage account."
 }
 
-variable "storage_account" {
-  type        = any
-  description = "Storage account for the catalg."
+variable "tags" {
+  type = object({
+    created_by  = string
+    contact     = string
+    customer    = string
+    environment = string
+    project     = string
+  })
+
+  description = "Default tags for resources, only applied to resource groups."
+}
+
+variable "virtual_network_subnet_ids" {
+  type        = list(string)
+  description = "Id of virtual network subnets."
 }

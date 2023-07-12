@@ -14,25 +14,27 @@ variable "client_ip" {
   description = "Client IP."
 }
 
+variable "catalog_container" {
+  type        = string
+  default     = "catalogs"
+  description = "Name of the container for the catalogs."
+}
+
+variable "catalog_name" {
+  type        = string
+  default     = "my_catalog"
+  description = "Name of the catalog."
+}
+
 variable "client_secret" {
   type        = string
   sensitive   = true
   description = "Client secret of the service principal."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_azuredatabricks_id" {
-  type        = string
-  description = "Id of the private dns zone for Azure Databricks in the connectivity subscription."
-}
-
-variable "connectivity_landing_zone_private_dns_zone_blob_id" {
-  type        = string
-  description = "Id of the private dns zone for BLOBs in the connectivity subscription."
-}
-
-variable "connectivity_landing_zone_private_dns_zone_dfs_id" {
-  type        = string
-  description = "Id of the private dns zone for Data Lake File system in the connectivity subscription."
+variable "connectivity_landing_zone_private_dns_zone_ids" {
+  type        = map(any)
+  description = "Ids of the private dns zones in the connectivity subscription."
 }
 
 variable "connectivity_landing_zone_virtual_network_id" {
@@ -73,7 +75,7 @@ variable "databricks_serverless_sql_subnets" {
 variable "enable_catalog" {
   type        = bool
   default     = false
-  description = "Enable Databricks Catalog, ensure that the service principal has the role admin_account in the Databricks account."
+  description = "Enable Databricks catalog, ensure that the service principal has the role admin_account in the Databricks account."
 }
 
 variable "enable_private_endpoints" {
@@ -103,10 +105,16 @@ variable "private_dns_zones" {
   type = map(string)
 
   default = {
-    dns_zone_azuredatabricks = "privatelink.azuredatabricks.net"
+    azuredatabricks = "privatelink.azuredatabricks.net"
   }
 
   description = "Map of private DNS zones."
+}
+
+variable "schema_name" {
+  type        = string
+  default     = "my_schema"
+  description = "Name of the schema."
 }
 
 variable "tags" {

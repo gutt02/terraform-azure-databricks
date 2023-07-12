@@ -1,10 +1,10 @@
 # https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/resources/azurecaf_name
-resource "azurecaf_name" "this" {
+resource "azurecaf_name" "rg" {
   count = var.resource_group == null ? 1 : 0
 
   resource_type = "azurerm_resource_group"
   prefixes      = var.global_settings.azurecaf_name.prefixes
-  suffixes      = ["network"]
+  suffixes      = ["storage"]
 }
 
 
@@ -12,7 +12,7 @@ resource "azurecaf_name" "this" {
 resource "azurerm_resource_group" "this" {
   count = var.resource_group == null ? 1 : 0
 
-  name     = azurecaf_name.this[0].result
+  name     = azurecaf_name.rg[0].result
   location = var.location
   tags     = var.tags
 }

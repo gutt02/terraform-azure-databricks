@@ -30,11 +30,6 @@ variable "client_secret" {
   description = "Client secret of the service principal."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_azuredatabricks" {
-  type        = any
-  description = "The private dns zone for Azure Databricks in the connectivity subscription."
-}
-
 variable "databricks_private_network_security_group_association" {
   type        = any
   description = "The databricks private network security association."
@@ -68,6 +63,16 @@ variable "global_settings" {
 variable "location" {
   type        = string
   description = "Default Azure region, use Azure CLI notation."
+}
+
+variable "private_dns_zone_azuredatabricks_backend" {
+  type        = any
+  description = "The private dns zone for Azure Databricks for the backend."
+}
+
+variable "private_dns_zone_azuredatabricks_frontend" {
+  type        = any
+  description = "The private dns zone for Azure Databricks for the frontend."
 }
 
 variable "private_endpoints_subnet" {

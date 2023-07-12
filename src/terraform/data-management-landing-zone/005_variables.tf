@@ -20,19 +20,9 @@ variable "client_secret" {
   description = "Client secret of the service principal."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_azuredatabricks_id" {
-  type        = string
-  description = "Id of the private dns zone for Azure Databricks in the connectivity subscription."
-}
-
-variable "connectivity_landing_zone_private_dns_zone_blob_id" {
-  type        = string
-  description = "Id of theprivate dns zone for BLOBs in the connectivity subscription."
-}
-
-variable "connectivity_landing_zone_private_dns_zone_dfs_id" {
-  type        = string
-  description = "Id of the private dns zone for Data Lake File system in the connectivity subscription."
+variable "connectivity_landing_zone_private_dns_zone_ids" {
+  type        = map(any)
+  description = "Ids of the private dns zones in the connectivity subscription."
 }
 
 variable "connectivity_landing_zone_virtual_network_id" {
@@ -69,15 +59,21 @@ variable "location" {
   description = "Default Azure region, use Azure CLI notation."
 }
 
+variable "metastore_container" {
+  type        = string
+  default     = "metastore"
+  description = "Name of the metastore container."
+}
+
 variable "metastore_name" {
   type        = string
   default     = "metastore-euw"
-  description = "Name of the Databricks Metastore."
+  description = "Name of the Databricks metastore."
 }
 
 variable "metastore_owner" {
   type        = string
-  description = "Owner of the Databricks Metastore."
+  description = "Owner of the Databricks metastore."
 }
 
 variable "tags" {

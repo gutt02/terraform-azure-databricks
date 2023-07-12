@@ -30,39 +30,14 @@ variable "client_secret" {
   description = "Client secret of the service principal."
 }
 
-variable "connectivity_landing_zone_private_dns_zone_blob" {
-  type        = any
-  description = "The private dns zone for BLOBs in the connectivity subscription."
-}
-
-variable "connectivity_landing_zone_private_dns_zone_dfs" {
-  type        = any
-  description = "The private dns zone for Data Lake File system in the connectivity subscription."
-}
-
-variable "databricks_private_subnet" {
-  type        = any
-  description = "The databricks private subnet."
-}
-
-variable "databricks_public_subnet" {
-  type        = any
-  description = "The databricks public subnet."
+variable "container_name" {
+  type        = string
+  description = "Name of the storage account container."
 }
 
 variable "databricks_workspace" {
   type        = any
   description = "The Azure Databricks workspace."
-}
-
-variable "enable_private_endpoints" {
-  type        = bool
-  description = "Enable private endpoints."
-}
-
-variable "resource_group" {
-  type        = any
-  description = "Resource group."
 }
 
 variable "global_settings" {
@@ -85,7 +60,12 @@ variable "metastore_owner" {
   description = "Owner of the Databricks Metastore."
 }
 
-variable "private_endpoints_subnet" {
+variable "resource_group" {
   type        = any
-  description = "The private endpoints subnet."
+  description = "Resource group."
+}
+
+variable "storage_account" {
+  type        = any
+  description = "Storage account for the metastore."
 }

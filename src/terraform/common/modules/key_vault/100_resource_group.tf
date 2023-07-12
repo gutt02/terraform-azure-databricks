@@ -4,7 +4,7 @@ resource "azurecaf_name" "rg" {
 
   resource_type = "azurerm_resource_group"
   prefixes      = var.global_settings.azurecaf_name.prefixes
-  suffixes      = ["dbw"]
+  suffixes      = ["vault"]
 }
 
 
@@ -18,5 +18,5 @@ resource "azurerm_resource_group" "this" {
 }
 
 locals {
-  resource_group = coalesce(var.resource_group, azurerm_resource_group.this[0])
+  resource_group = var.resource_group == null ? azurerm_resource_group.this[0] : var.resource_group
 }

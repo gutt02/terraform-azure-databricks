@@ -74,9 +74,10 @@ variable "private_dns_zones" {
   type = map(string)
 
   default = {
-    dns_zone_azuredatabricks = "privatelink.azuredatabricks.net"
-    dns_zone_blob            = "privatelink.blob.core.windows.net"
-    dns_zone_dfs             = "privatelink.dfs.core.windows.net"
+    azuredatabricks = "privatelink.azuredatabricks.net"
+    blob            = "privatelink.blob.core.windows.net"
+    dfs             = "privatelink.dfs.core.windows.net"
+    vaultcore       = "privatelink.vaultcore.azure.net"
   }
 
   description = "Map of private DNS zones."

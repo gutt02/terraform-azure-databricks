@@ -85,7 +85,14 @@ resource "azurerm_subnet" "databricks_public" {
   }
 
   service_endpoints = [
-    "Microsoft.Storage"
+    "Microsoft.AzureCosmosDB",
+    "Microsoft.CognitiveServices",
+    "Microsoft.EventHub",
+    "Microsoft.KeyVault",
+    "Microsoft.ServiceBus",
+    "Microsoft.Sql",
+    "Microsoft.Storage",
+    "Microsoft.Web"
   ]
 }
 
@@ -109,7 +116,14 @@ resource "azurerm_subnet" "databricks_private" {
   }
 
   service_endpoints = [
-    "Microsoft.Storage"
+    "Microsoft.AzureCosmosDB",
+    "Microsoft.CognitiveServices",
+    "Microsoft.EventHub",
+    "Microsoft.KeyVault",
+    "Microsoft.ServiceBus",
+    "Microsoft.Sql",
+    "Microsoft.Storage",
+    "Microsoft.Web"
   ]
 }
 
