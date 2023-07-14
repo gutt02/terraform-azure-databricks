@@ -1,7 +1,7 @@
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint
 # https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource
 resource "azurerm_private_endpoint" "blob" {
-  count = var.enable_private_endpoints && var.private_dns_zones["blob"] ? 1 : 0
+  count = var.enable_private_endpoints && can(var.private_dns_zones["blob"]) ? 1 : 0
 
   name                = "${azurerm_storage_account.this.name}-pe-blob"
   location            = var.location
@@ -22,7 +22,7 @@ resource "azurerm_private_endpoint" "blob" {
 }
 
 resource "azurerm_private_endpoint" "dfs" {
-  count = var.enable_private_endpoints && var.private_dns_zones["dfs"] ? 1 : 0
+  count = var.enable_private_endpoints && can(var.private_dns_zones["dfs"]) ? 1 : 0
 
   name                = "${azurerm_storage_account.this.name}-pe-dfs"
   location            = var.location
