@@ -92,7 +92,7 @@ module "azure_databricks_workspace" {
   global_settings                                       = var.global_settings
   location                                              = var.location
   private_dns_zone_azuredatabricks_backend              = null
-  private_dns_zone_azuredatabricks_frontend             = data.azurerm_private_dns_zone.this["azuredatabricks"]
+  private_dns_zone_azuredatabricks_frontend             = try(data.azurerm_private_dns_zone.this["azuredatabricks"], null)
   private_endpoints_subnet                              = module.shared.private_endpoints_subnet
   resource_group                                        = null
   tags                                                  = var.tags
