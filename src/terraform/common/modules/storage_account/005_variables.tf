@@ -24,12 +24,6 @@ variable "client_ip" {
   description = "Client IP."
 }
 
-variable "client_secret" {
-  type        = string
-  sensitive   = true
-  description = "Client secret of the service principal."
-}
-
 variable "private_dns_zones" {
   type        = any
   description = "The private dns zones for BLOBs, Data Lake File systems, etc."
@@ -58,23 +52,6 @@ variable "private_endpoints_subnet" {
 variable "resource_group" {
   type        = any
   description = "Resource group."
-}
-
-variable "storage_account_suffix" {
-  type        = string
-  description = "Suffix of the storage account."
-}
-
-variable "tags" {
-  type = object({
-    created_by  = string
-    contact     = string
-    customer    = string
-    environment = string
-    project     = string
-  })
-
-  description = "Default tags for resources, only applied to resource groups."
 }
 
 variable "virtual_network_subnet_ids" {

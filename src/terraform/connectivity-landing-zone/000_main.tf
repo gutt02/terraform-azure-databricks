@@ -32,20 +32,26 @@ data "azurerm_client_config" "this" {
 data "azurerm_subscription" "this" {
 }
 
+module "resource_group_network" {
+  source = "../common/modules/resource_group"
+
+  client_config   = data.azurerm_client_config.this
+  subscription    = data.azurerm_subscription.this
+  global_settings = merge(var.global_settings, { azurecaf_name = { prefixes = var.global_settings.azurecaf_name.prefixes, suffixes = ["network"] } })
+  location        = var.location
+  tags            = var.tags
+}
+
 module "shared" {
   source = "./modules/shared"
 
   client_config        = data.azurerm_client_config.this
   subscription         = data.azurerm_subscription.this
-  agent_ip             = var.agent_ip
-  client_ip            = var.client_ip
-  client_secret        = var.client_secret
   global_settings      = var.global_settings
   location             = var.location
   on_premises_networks = var.on_premises_networks
   private_dns_zones    = var.private_dns_zones
-  resource_group       = null
-  tags                 = var.tags
+  resource_group       = module.resource_group_network.resource_group
   virtual_network      = var.virtual_network
 }
 
@@ -60,11 +66,9 @@ module "dns_private_resolver" {
   location                                = var.location
   dns_private_resolver_inbound_subnet_id  = module.shared.dns_private_resolver_inbound_subnet_id
   dns_private_resolver_outbound_subnet_id = module.shared.dns_private_resolver_outbound_subnet_id
-  resource_group                          = module.shared.resource_group
+  resource_group                          = module.resource_group_network.resource_group
 
-  depends_on = [
-    module.shared
-  ]
+  depends_on = [module.shared]
 }
 
 module "virtual_network_gateway" {
@@ -77,10 +81,8 @@ module "virtual_network_gateway" {
   global_settings         = var.global_settings
   location                = var.location
   gateway_subnet_id       = module.shared.gateway_subnet_id
-  resource_group          = module.shared.resource_group
+  resource_group          = module.resource_group_network.resource_group
   virtual_network_gateway = var.virtual_network_gateway
 
-  depends_on = [
-    module.dns_private_resolver
-  ]
+  depends_on = [module.dns_private_resolver]
 }

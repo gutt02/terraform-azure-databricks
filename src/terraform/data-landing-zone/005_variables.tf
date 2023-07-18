@@ -20,12 +20,6 @@ variable "catalog_container" {
   description = "Name of the container for the catalogs."
 }
 
-variable "catalog_name" {
-  type        = string
-  default     = "my_catalog"
-  description = "Name of the catalog."
-}
-
 variable "client_secret" {
   type        = string
   sensitive   = true
@@ -47,9 +41,34 @@ variable "databricks_account_id" {
   description = "The Databricks Account Id."
 }
 
-variable "databricks_metastore_id" {
-  type        = string
-  description = "The Databricks Metastore Id."
+variable "databricks_catalogs" {
+  type = list(object({
+    metastore = object({
+      id = string
+      grants = list(object({
+        principal  = string
+        privileges = list(string)
+      }))
+    })
+    name               = string
+    container_name     = string
+    storage_account_id = optional(string)
+    grants = list(object({
+      principal  = string
+      privileges = list(string)
+    }))
+    schemas = list(object({
+      name               = string
+      container_name     = string
+      storage_account_id = optional(string)
+      grants = list(object({
+        principal  = string
+        privileges = list(string)
+      }))
+    }))
+  }))
+
+  description = "Databricks catalogs."
 }
 
 # https://learn.microsoft.com/en-us/azure/databricks/sql/admin/serverless-firewall
@@ -109,12 +128,6 @@ variable "private_dns_zones" {
   }
 
   description = "Map of private DNS zones."
-}
-
-variable "schema_name" {
-  type        = string
-  default     = "my_schema"
-  description = "Name of the schema."
 }
 
 variable "tags" {

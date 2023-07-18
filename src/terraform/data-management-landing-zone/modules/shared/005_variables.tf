@@ -24,12 +24,6 @@ variable "client_ip" {
   description = "Client IP."
 }
 
-variable "client_secret" {
-  type        = string
-  sensitive   = true
-  description = "Client secret of the service principal."
-}
-
 variable "connectivity_landing_zone_virtual_network" {
   type        = any
   description = "Virutal Network of of the connectivity landing zone."
@@ -48,18 +42,6 @@ variable "location" {
 variable "resource_group" {
   type        = any
   description = "Resource group."
-}
-
-variable "tags" {
-  type = object({
-    created_by  = string
-    contact     = string
-    customer    = string
-    environment = string
-    project     = string
-  })
-
-  description = "Default tags for resources, only applied to resource groups."
 }
 
 variable "use_remote_gateways" {

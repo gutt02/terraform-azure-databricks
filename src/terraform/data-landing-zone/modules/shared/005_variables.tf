@@ -61,18 +61,6 @@ variable "resource_group" {
   description = "Resource group."
 }
 
-variable "tags" {
-  type = object({
-    created_by  = string
-    contact     = string
-    customer    = string
-    environment = string
-    project     = string
-  })
-
-  description = "Default tags for resources, only applied to resource groups."
-}
-
 variable "use_remote_gateways" {
   type        = bool
   description = "Use remote gateways in peering."
