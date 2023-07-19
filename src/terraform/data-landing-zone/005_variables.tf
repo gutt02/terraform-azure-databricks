@@ -14,12 +14,6 @@ variable "client_ip" {
   description = "Client IP."
 }
 
-variable "catalog_container" {
-  type        = string
-  default     = "catalogs"
-  description = "Name of the container for the catalogs."
-}
-
 variable "client_secret" {
   type        = string
   sensitive   = true
