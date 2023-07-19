@@ -1,16 +1,6 @@
-variable "client_config" {
-  type        = any
-  description = "Configuration of the AzureRM provider."
-}
-
-variable "subscription" {
-  type        = any
-  description = "Information about an existing Subscription."
-}
-
-variable "databricks_access_connector" {
-  type        = any
-  description = "Azure Databricks access connector."
+variable "databricks_access_connector_id" {
+  type        = string
+  description = "Id of the Azure Databricks access connector."
 }
 
 variable "databricks_catalog" {
@@ -18,12 +8,17 @@ variable "databricks_catalog" {
   description = "Azure Databricks catalog."
 }
 
-variable "databricks_workspace" {
-  type        = any
-  description = "The Azure Databricks workspace."
+variable "databricks_metastore_id" {
+  type        = string
+  description = "Id of the Databricks metastore."
+}
+
+variable "owner" {
+  type        = string
+  description = "Owner of the Databricks catalog."
 }
 
 variable "storage_account_id" {
-  type = string
+  type        = string
   description = "Id of the Storage Account for the meta data."
 }

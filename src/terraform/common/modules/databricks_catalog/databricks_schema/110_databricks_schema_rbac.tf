@@ -6,19 +6,21 @@ resource "databricks_grants" "schema" {
     for_each = var.databricks_schema.grants
     content {
       principal  = grant.value.principal
-      privileges = grant.value.privileges
+      privileges = grant.value.privileges.schema
     }
   }
 }
 
 resource "databricks_grants" "storage_credential" {
-  storage_credential = databricks_storage_credential.this.id
+  count = local.storage_account_id != null ? 1 : 0
+
+  storage_credential = databricks_storage_credential.this[0].id
 
   dynamic "grant" {
     for_each = var.databricks_schema.grants
     content {
       principal  = grant.value.principal
-      privileges = ["ALL_PRIVILEGES"]
+      privileges = grant.value.privileges.storage_credential
     }
   }
 
@@ -26,13 +28,15 @@ resource "databricks_grants" "storage_credential" {
 }
 
 resource "databricks_grants" "external_location" {
-  external_location = databricks_external_location.this.id
+  count = local.storage_account_id != null ? 1 : 0
+
+  external_location = databricks_external_location.this[0].id
 
   dynamic "grant" {
     for_each = var.databricks_schema.grants
     content {
       principal  = grant.value.principal
-      privileges = ["ALL_PRIVILEGES"]
+      privileges = grant.value.privileges.external_location
     }
   }
 

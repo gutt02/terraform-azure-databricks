@@ -175,8 +175,6 @@ module "storage_account_data" {
 module "databricks_access_connector" {
   source = "../common/modules/databricks_access_connector"
 
-  count = var.enable_catalog ? 1 : 0
-
   client_config   = data.azurerm_client_config.this
   subscription    = data.azurerm_subscription.this
   global_settings = var.global_settings
@@ -186,8 +184,6 @@ module "databricks_access_connector" {
 
 module "storage_account_uc" {
   source = "../common/modules/storage_account"
-
-  count = var.enable_catalog ? 1 : 0
 
   client_config              = data.azurerm_client_config.this
   subscription               = data.azurerm_subscription.this
@@ -202,22 +198,34 @@ module "storage_account_uc" {
   virtual_network_subnet_ids = concat([module.shared.databricks_private_subnet.id, module.shared.databricks_public_subnet.id], coalesce(var.databricks_serverless_sql_subnets, []))
 }
 
+# Wait for the creations of the groups and the assignment of the grants
+resource "time_sleep" "delay_catalog_deployment" {
+  count = var.enable_catalog ? 1 : 0
+
+  depends_on = [
+    databricks_metastore_assignment.this,
+    databricks_grants.this,
+    azurerm_role_assignment.this,
+    azurerm_role_assignment.uc,
+    databricks_mws_permission_assignment.this,
+    databricks_group_member.this
+  ]
+
+  create_duration = "60s"
+}
+
 module "azure_databricks_catalog" {
   source = "../common/modules/databricks_catalog"
 
   for_each = {
-    for o in var.databricks_catalogs : o.name => o if var.enable_catalog
+    for o in var.unity_catalog.catalogs : o.name => o if var.enable_catalog
   }
 
-  client_config               = data.azurerm_client_config.this
-  subscription                = data.azurerm_subscription.this
-  databricks_catalog          = each.value
-  databricks_access_connector = module.databricks_access_connector[0].databricks_access_connector
-  databricks_workspace        = module.databricks_workspace.databricks_workspace
-  storage_account_id          = coalesce(each.value.storage_account_id, module.storage_account_uc[0].storage_account.id)
+  databricks_catalog             = each.value
+  databricks_access_connector_id = module.databricks_access_connector.databricks_access_connector.id
+  databricks_metastore_id        = var.unity_catalog.metastore.id
+  owner                          = each.value.owner != null ? each.value.owner : data.azurerm_client_config.this.client_id
+  storage_account_id             = each.value.storage_account_id != null ? each.value.storage_account_id : module.storage_account_uc.storage_account.id
 
-  depends_on = [
-    databricks_metastore_assignment.this,
-    azurerm_role_assignment.this
-  ]
+  depends_on = [time_sleep.delay_catalog_deployment]
 }

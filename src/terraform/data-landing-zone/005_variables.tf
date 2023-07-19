@@ -41,8 +41,12 @@ variable "databricks_account_id" {
   description = "The Databricks Account Id."
 }
 
-variable "databricks_catalogs" {
-  type = list(object({
+variable "unity_catalog" {
+  type = object({
+    groups = list(object({
+      name        = string
+      permissions = list(string)
+    }))
     metastore = object({
       id = string
       grants = list(object({
@@ -50,23 +54,35 @@ variable "databricks_catalogs" {
         privileges = list(string)
       }))
     })
-    name               = string
-    container_name     = string
-    storage_account_id = optional(string)
-    grants = list(object({
-      principal  = string
-      privileges = list(string)
-    }))
-    schemas = list(object({
+    catalogs = list(object({
       name               = string
       container_name     = string
+      owner              = optional(string)
       storage_account_id = optional(string)
       grants = list(object({
-        principal  = string
-        privileges = list(string)
+        principal = string
+        privileges = object({
+          catalog            = list(string)
+          external_location  = optional(list(string))
+          storage_credential = optional(list(string))
+        })
+      }))
+      schemas = list(object({
+        name               = string
+        container_name     = string
+        owner              = optional(string)
+        storage_account_id = optional(string)
+        grants = list(object({
+          principal = string
+          privileges = object({
+            schema             = list(string)
+            external_location  = optional(list(string))
+            storage_credential = optional(list(string))
+          })
+        }))
       }))
     }))
-  }))
+  })
 
   description = "Databricks catalogs."
 }

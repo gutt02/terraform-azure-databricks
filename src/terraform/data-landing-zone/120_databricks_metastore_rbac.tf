@@ -1,13 +1,11 @@
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/grants
 resource "databricks_grants" "this" {
-  for_each = {
-    for o in var.databricks_catalogs : o.name => o if var.enable_catalog
-  }
+  count = var.enable_catalog ? 1 : 0
 
-  metastore = each.value.metastore.id
+  metastore = var.unity_catalog.metastore.id
 
   dynamic "grant" {
-    for_each = each.value.metastore.grants
+    for_each = var.unity_catalog.metastore.grants
     content {
       principal  = grant.value.principal
       privileges = grant.value.privileges

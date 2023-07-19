@@ -14,6 +14,16 @@ terraform {
   }
 }
 
+resource "time_sleep" "delay_schema_deployment" {
+  depends_on = [
+    # databricks_grants.catalog,
+    # databricks_grants.storage_credential,
+    # databricks_grants.external_location
+  ]
+
+  create_duration = "60s"
+}
+
 module "databricks_schema" {
   source = "./databricks_schema"
 
@@ -21,11 +31,11 @@ module "databricks_schema" {
     for o in var.databricks_catalog.schemas : o.name => o
   }
 
-  client_config               = var.client_config
-  subscription                = var.subscription
-  databricks_access_connector = var.databricks_access_connector
-  databricks_catalog          = databricks_catalog.this
-  databricks_schema           = each.value
-  databricks_workspace        = var.databricks_workspace
-  storage_account_id          = coalesce(each.value.storage_account_id, var.databricks_catalog.storage_account_id, var.storage_account_id)
+  databricks_access_connector_id = var.databricks_access_connector_id
+  databricks_catalog_id          = databricks_catalog.this.id
+  databricks_schema              = each.value
+  owner                          = each.value.owner != null ? each.value.owner : var.owner
+  storage_account_id             = each.value.storage_account_id != null ? each.value.storage_account_id : var.storage_account_id
+
+  depends_on = [time_sleep.delay_schema_deployment]
 }
