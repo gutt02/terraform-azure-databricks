@@ -48,31 +48,38 @@ variable "unity_catalog" {
         privileges = list(string)
       }))
     })
+    grants = optional(list(object({
+      principal = string
+      object_privileges = list(object({
+        type       = string
+        privileges = list(string)
+      }))
+    })))
     catalogs = list(object({
       name               = string
-      container_name     = string
+      filesystem_name    = string
       owner              = optional(string)
       storage_account_id = optional(string)
       grants = list(object({
-        principal = string
-        privileges = object({
-          catalog            = list(string)
-          external_location  = optional(list(string))
-          storage_credential = optional(list(string))
-        })
+        principal = optional(string)
+        object_privileges = optional(list(object({
+          type       = string
+          privileges = list(string)
+        })))
+        use_default = optional(bool, false)
       }))
       schemas = list(object({
         name               = string
-        container_name     = string
+        directory_name     = string
         owner              = optional(string)
         storage_account_id = optional(string)
         grants = list(object({
-          principal = string
-          privileges = object({
-            schema             = list(string)
-            external_location  = optional(list(string))
-            storage_credential = optional(list(string))
-          })
+          principal = optional(string)
+          object_privileges = optional(list(object({
+            type       = string
+            privileges = list(string)
+          })))
+          use_default = optional(bool, false)
         }))
       }))
     }))

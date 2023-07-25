@@ -1,3 +1,12 @@
+# https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep
+resource "time_sleep" "delay_databricks_grants_this" {
+  count = var.enable_catalog ? 1 : 0
+
+  depends_on = [databricks_metastore_assignment.this]
+
+  create_duration = local.default_databricks_api_delay
+}
+
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/grants
 resource "databricks_grants" "this" {
   count = var.enable_catalog ? 1 : 0
@@ -12,5 +21,5 @@ resource "databricks_grants" "this" {
     }
   }
 
-  depends_on = [databricks_metastore_assignment.this]
+  depends_on = [time_sleep.delay_databricks_grants_this]
 }

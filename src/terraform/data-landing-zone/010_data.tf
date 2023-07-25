@@ -1,4 +1,6 @@
 locals {
+  default_databricks_api_delay = "5s"
+
   resource_regex_private_dns_zone                = "(?i)subscriptions/(.+)/resourceGroups/(.+)/providers/Microsoft.Network/privateDnsZones/(.+)"
   resource_regex_virtual_network                 = "(?i)subscriptions/(.+)/resourceGroups/(.+)/providers/Microsoft.Network/virtualNetworks/(.+)"
   connectivity_landing_zone_subscription_id      = regex(local.resource_regex_virtual_network, var.connectivity_landing_zone_virtual_network_id)[0]

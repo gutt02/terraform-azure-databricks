@@ -203,15 +203,13 @@ resource "time_sleep" "delay_catalog_deployment" {
   count = var.enable_catalog ? 1 : 0
 
   depends_on = [
-    databricks_metastore_assignment.this,
     databricks_grants.this,
     azurerm_role_assignment.this,
     azurerm_role_assignment.uc,
-    databricks_mws_permission_assignment.this,
     databricks_group_member.this
   ]
 
-  create_duration = "60s"
+  create_duration = "5s"
 }
 
 module "azure_databricks_catalog" {
@@ -224,6 +222,7 @@ module "azure_databricks_catalog" {
   databricks_catalog             = each.value
   databricks_access_connector_id = module.databricks_access_connector.databricks_access_connector.id
   databricks_metastore_id        = var.unity_catalog.metastore.id
+  grants                         = var.unity_catalog.grants
   owner                          = each.value.owner != null ? each.value.owner : data.azurerm_client_config.this.client_id
   storage_account_id             = each.value.storage_account_id != null ? each.value.storage_account_id : module.storage_account_uc.storage_account.id
 

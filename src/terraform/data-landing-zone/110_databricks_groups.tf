@@ -3,6 +3,31 @@
 # Note: The service principal needs the rights to create a catalog, schema, etc.
 # https://learn.microsoft.com/en-us/azure/databricks/administration-guide/users-groups/scim/aad
 
+# https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep
+resource "time_sleep" "delay_databricks_group_this" {
+  count = var.enable_catalog ? 1 : 0
+
+  depends_on = [databricks_metastore_assignment.this]
+
+  create_duration = local.default_databricks_api_delay
+}
+
+resource "time_sleep" "delay_data_databricks_group_this" {
+  count = var.enable_catalog ? 1 : 0
+
+  depends_on = [databricks_group.this]
+
+  create_duration = local.default_databricks_api_delay
+}
+
+resource "time_sleep" "delay_databricks_group_member_this" {
+  count = var.enable_catalog ? 1 : 0
+
+  depends_on = [data.databricks_group.this]
+
+  create_duration = local.default_databricks_api_delay
+}
+
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/group
 resource "databricks_group" "this" {
   provider = databricks.azure_account
@@ -13,7 +38,7 @@ resource "databricks_group" "this" {
 
   display_name = each.value.name
 
-  depends_on = [databricks_metastore_assignment.this]
+  depends_on = [time_sleep.delay_databricks_group_this]
 }
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/data-sources/group
@@ -26,10 +51,7 @@ data "databricks_group" "this" {
 
   display_name = each.value.name
 
-  depends_on = [
-    databricks_metastore_assignment.this,
-    databricks_group.this
-  ]
+  depends_on = [time_sleep.delay_data_databricks_group_this]
 }
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_permission_assignment
@@ -62,4 +84,6 @@ resource "databricks_group_member" "this" {
 
   group_id  = data.databricks_group.this[each.key].id
   member_id = data.databricks_service_principal.this.id
+
+  depends_on = [time_sleep.delay_databricks_group_member_this]
 }

@@ -13,6 +13,11 @@ variable "databricks_metastore_id" {
   description = "Id of the Databricks metastore."
 }
 
+variable "grants" {
+  type        = any
+  description = "Default grants."
+}
+
 variable "owner" {
   type        = string
   description = "Owner of the Databricks catalog."
