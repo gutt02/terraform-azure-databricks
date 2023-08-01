@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.62.0"
+      version = "~> 3.67.0"
     }
 
     azurecaf = {
@@ -212,7 +212,7 @@ resource "time_sleep" "delay_catalog_deployment" {
   create_duration = "5s"
 }
 
-module "azure_databricks_catalog" {
+module "databricks_catalog" {
   source = "../common/modules/databricks_catalog"
 
   for_each = {
@@ -227,4 +227,14 @@ module "azure_databricks_catalog" {
   storage_account_id             = each.value.storage_account_id != null ? each.value.storage_account_id : module.storage_account_uc.storage_account.id
 
   depends_on = [time_sleep.delay_catalog_deployment]
+}
+
+module "databricks_repository" {
+  count = var.enable_catalog && var.databricks_repository != null ? 1 : 0
+
+  source = "../common/modules/databricks_repository"
+
+  databricks_repository = var.databricks_repository
+
+  depends_on = [module.databricks_catalog]
 }

@@ -35,12 +35,39 @@ variable "databricks_account_id" {
   description = "The Databricks Account Id."
 }
 
+
+variable "databricks_repository" {
+  type = object({
+    databricks_git_credential = object({
+      git_username          = string
+      git_provider          = string
+      personal_access_token = string
+    })
+
+    databricks_repo = object({
+      url          = string
+      git_provider = optional(string)
+      path         = optional(string)
+      branch       = optional(string)
+      tag          = optional(string)
+    })
+
+    permissions = list(object({
+      group_name       = string
+      permission_level = string
+    }))
+  })
+
+  description = "Databricks Git repository."
+}
+
 variable "unity_catalog" {
   type = object({
     groups = list(object({
       name        = string
       permissions = list(string)
     }))
+
     metastore = object({
       id = string
       grants = list(object({
@@ -48,6 +75,7 @@ variable "unity_catalog" {
         privileges = list(string)
       }))
     })
+
     grants = optional(list(object({
       principal = string
       object_privileges = list(object({
@@ -55,6 +83,7 @@ variable "unity_catalog" {
         privileges = list(string)
       }))
     })))
+
     catalogs = list(object({
       name               = string
       filesystem_name    = string
