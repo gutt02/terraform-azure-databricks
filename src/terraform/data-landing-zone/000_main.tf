@@ -224,9 +224,11 @@ module "databricks_catalog" {
   databricks_metastore_id        = var.unity_catalog.metastore.id
   grants                         = var.unity_catalog.grants
   owner                          = each.value.owner != null ? each.value.owner : data.azurerm_client_config.this.client_id
-  storage_account_id             = each.value.storage_account_id != null ? each.value.storage_account_id : module.storage_account_uc.storage_account.id
 
-  depends_on = [time_sleep.delay_catalog_deployment]
+  depends_on = [
+    time_sleep.delay_catalog_deployment,
+    module.storage_account_uc
+  ]
 }
 
 module "databricks_repository" {

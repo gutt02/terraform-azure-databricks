@@ -22,8 +22,3 @@ variable "owner" {
   type        = string
   description = "Owner of the Databricks catalog."
 }
-
-variable "storage_account_id" {
-  type        = string
-  description = "Id of the Storage Account for the meta data."
-}

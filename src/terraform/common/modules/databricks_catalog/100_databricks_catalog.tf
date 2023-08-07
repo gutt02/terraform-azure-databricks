@@ -8,7 +8,7 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
 
 # https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/storage_credential
 resource "databricks_storage_credential" "this" {
-  count = local.storage_account_id != null ? 1 : 0
+  count = local.storage_account_id != null && var.databricks_catalog.filesystem_name != null ? 1 : 0
 
   name = format("%s@%s", var.databricks_catalog.filesystem_name, local.storage_account_name)
 

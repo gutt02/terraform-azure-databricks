@@ -35,7 +35,6 @@ variable "databricks_account_id" {
   description = "The Databricks Account Id."
 }
 
-
 variable "databricks_repository" {
   type = object({
     databricks_git_credential = object({
@@ -89,6 +88,7 @@ variable "unity_catalog" {
       filesystem_name    = string
       owner              = optional(string)
       storage_account_id = optional(string)
+
       grants = list(object({
         principal = optional(string)
         object_privileges = optional(list(object({
@@ -97,6 +97,7 @@ variable "unity_catalog" {
         })))
         use_default = optional(bool, false)
       }))
+
       schemas = list(object({
         name               = string
         directory_name     = string

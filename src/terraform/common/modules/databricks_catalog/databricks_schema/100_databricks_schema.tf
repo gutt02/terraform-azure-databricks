@@ -8,7 +8,7 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_data_lake_gen2_path
 resource "azurerm_storage_data_lake_gen2_path" "this" {
-  count = local.storage_account_id != null ? 1 : 0
+  count = local.storage_account_id != null && var.databricks_schema.directory_name != null ? 1 : 0
 
   path               = var.databricks_schema.directory_name
   filesystem_name    = var.filesystem_name

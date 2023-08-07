@@ -27,7 +27,7 @@ module "databricks_schema" {
   filesystem_name                   = var.databricks_catalog.filesystem_name
   grants                            = var.grants
   owner                             = each.value.owner != null ? each.value.owner : var.owner
-  storage_account_id                = each.value.storage_account_id != null ? each.value.storage_account_id : var.storage_account_id
+  storage_account_id                = var.databricks_catalog.storage_account_id
   storage_data_lake_gen2_filesystem = azurerm_storage_data_lake_gen2_filesystem.this
 
   depends_on = [databricks_catalog.this]
