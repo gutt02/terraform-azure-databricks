@@ -38,9 +38,8 @@ variable "databricks_account_id" {
 variable "databricks_repository" {
   type = object({
     databricks_git_credential = object({
-      git_username          = string
-      git_provider          = string
-      personal_access_token = string
+      git_username = string
+      git_provider = string
     })
 
     databricks_repo = object({
@@ -58,6 +57,12 @@ variable "databricks_repository" {
   })
 
   description = "Databricks Git repository."
+}
+
+variable "git_personal_access_token" {
+  type        = string
+  sensitive   = true
+  description = "Personal access token."
 }
 
 variable "unity_catalog" {
@@ -121,20 +126,7 @@ variable "unity_catalog" {
 # https://learn.microsoft.com/en-us/azure/databricks/sql/admin/serverless-firewall
 # https://learn.microsoft.com/en-us/azure/databricks/resources/supported-regions#serverless-sql-subnets
 variable "databricks_serverless_sql_subnets" {
-  type = list(string)
-  default = [
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos3/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos4/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos5/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos6/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeurope-nephos7/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos2/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos3/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos4/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos5/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet",
-    "/subscriptions/8453a5d5-9e9e-40c7-87a4-0ab4cc197f48/resourceGroups/prod-azure-westeuropec2-nephos6/providers/Microsoft.Network/virtualNetworks/kaas-vnet/subnets/worker-subnet"
-  ]
-
+  type        = list(string)
   description = "Subnets for Databricks Serverless SQL, leave empty if not required."
 }
 
@@ -175,6 +167,12 @@ variable "private_dns_zones" {
   }
 
   description = "Map of private DNS zones."
+}
+
+variable "private_endpoints_subresource_names" {
+  type        = list(string)
+  default     = ["databricks_ui_api"]
+  description = "List of subresources for the private endpoints."
 }
 
 variable "tags" {

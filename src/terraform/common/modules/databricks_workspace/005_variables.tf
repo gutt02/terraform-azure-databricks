@@ -58,6 +58,11 @@ variable "private_endpoints_subnet" {
   description = "The private endpoints subnet."
 }
 
+variable "private_endpoints_subresource_names" {
+  type        = any
+  description = "List of subresources for the private endpoints."
+}
+
 variable "resource_group" {
   type        = any
   description = "Resource group."

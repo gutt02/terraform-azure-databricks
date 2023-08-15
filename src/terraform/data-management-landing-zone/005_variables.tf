@@ -76,6 +76,12 @@ variable "metastore_owner" {
   description = "Owner of the Databricks metastore."
 }
 
+variable "private_endpoints_subresource_names" {
+  type        = list(string)
+  default     = ["browser_authentication", "databricks_ui_api"]
+  description = "List of subresources for the private endpoints."
+}
+
 variable "tags" {
   type = object({
     created_by  = string
@@ -113,19 +119,19 @@ variable "virtual_network" {
   })
 
   default = {
-    address_space = "192.168.10.0/23"
+    address_space = "192.168.10.0/26"
     subnets = {
       private_endpoints = {
         name          = "private-endpoints"
-        address_space = "192.168.10.0/26"
+        address_space = "192.168.10.0/28"
       }
       databricks_public = {
         name          = "databricks-public"
-        address_space = "192.168.10.64/26"
+        address_space = "192.168.10.16/28"
       }
       databricks_private = {
         name          = "databricks-private"
-        address_space = "192.168.10.128/26"
+        address_space = "192.168.10.32/28"
       }
     }
   }

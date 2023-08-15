@@ -122,6 +122,7 @@ module "databricks_workspace" {
   private_dns_zone_azuredatabricks_backend              = try(module.shared.private_dns_zones["azuredatabricks"], null)
   private_dns_zone_azuredatabricks_frontend             = try(data.azurerm_private_dns_zone.this["azuredatabricks"], null)
   private_endpoints_subnet                              = module.shared.private_endpoints_subnet
+  private_endpoints_subresource_names                   = var.private_endpoints_subresource_names
   resource_group                                        = module.resource_group_databricks_workspace.resource_group
   virtual_network                                       = module.shared.virtual_network
 
@@ -205,7 +206,6 @@ resource "time_sleep" "delay_catalog_deployment" {
   depends_on = [
     databricks_grants.this,
     azurerm_role_assignment.this,
-    azurerm_role_assignment.uc,
     databricks_group_member.this
   ]
 
@@ -232,11 +232,12 @@ module "databricks_catalog" {
 }
 
 module "databricks_repository" {
-  count = var.enable_catalog && var.databricks_repository != null ? 1 : 0
+  count = var.databricks_repository != null ? 1 : 0
 
   source = "../common/modules/databricks_repository"
 
-  databricks_repository = var.databricks_repository
+  databricks_repository     = var.databricks_repository
+  git_personal_access_token = var.git_personal_access_token
 
-  depends_on = [module.databricks_catalog]
+  depends_on = [module.databricks_workspace]
 }

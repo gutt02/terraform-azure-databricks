@@ -1,13 +1,18 @@
 # https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/resources/azurecaf_name
-resource "azurecaf_name" "this" {
-  resource_type  = "azurerm_databricks_workspace"
-  prefixes       = var.global_settings.azurecaf_name.prefixes
-  resource_types = ["azurerm_storage_account"]
+resource "azurecaf_name" "databricks_workspace" {
+  resource_type = "azurerm_databricks_workspace"
+  prefixes      = var.global_settings.azurecaf_name.prefixes
+}
+
+resource "azurecaf_name" "storage_account" {
+  resource_type = "azurerm_storage_account"
+  prefixes      = var.global_settings.azurecaf_name.prefixes
+  suffixes      = ["db", "managed"]
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/databricks_workspace
 resource "azurerm_databricks_workspace" "this" {
-  name                = azurecaf_name.this.result
+  name                = azurecaf_name.databricks_workspace.result
   location            = var.location
   resource_group_name = var.resource_group.name
 
@@ -17,7 +22,7 @@ resource "azurerm_databricks_workspace" "this" {
     public_subnet_network_security_group_association_id  = var.databricks_public_network_security_group_association.id
     private_subnet_name                                  = var.databricks_private_subnet.name
     private_subnet_network_security_group_association_id = var.databricks_private_network_security_group_association.id
-    storage_account_name                                 = azurecaf_name.this.results["azurerm_storage_account"]
+    storage_account_name                                 = azurecaf_name.storage_account.result
     virtual_network_id                                   = var.virtual_network.id
   }
 

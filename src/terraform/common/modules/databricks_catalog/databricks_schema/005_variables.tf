@@ -34,6 +34,6 @@ variable "storage_account_id" {
 }
 
 variable "storage_data_lake_gen2_filesystem" {
-  type = any
+  type        = any
   description = "Storage Data Lake Gen2 filesystem of the catalog, if schema and catalog share the same storage."
 }

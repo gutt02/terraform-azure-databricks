@@ -109,6 +109,7 @@ module "databricks_workspace" {
   private_dns_zone_azuredatabricks_backend              = null
   private_dns_zone_azuredatabricks_frontend             = try(data.azurerm_private_dns_zone.this["azuredatabricks"], null)
   private_endpoints_subnet                              = module.shared.private_endpoints_subnet
+  private_endpoints_subresource_names                   = var.private_endpoints_subresource_names
   resource_group                                        = module.resource_group_databricks_workspace.resource_group
   virtual_network                                       = module.shared.virtual_network
 
@@ -117,8 +118,6 @@ module "databricks_workspace" {
 
 module "databricks_access_connector" {
   source = "../common/modules/databricks_access_connector"
-
-  count = var.enable_metastore ? 1 : 0
 
   client_config   = data.azurerm_client_config.this
   subscription    = data.azurerm_subscription.this
@@ -129,8 +128,6 @@ module "databricks_access_connector" {
 
 module "storage_account_uc" {
   source = "../common/modules/storage_account"
-
-  count = var.enable_metastore ? 1 : 0
 
   agent_ip                   = var.agent_ip
   client_ip                  = var.client_ip
@@ -153,14 +150,14 @@ module "databricks_metastore" {
   client_config               = data.azurerm_client_config.this
   subscription                = data.azurerm_subscription.this
   container_name              = var.metastore_container
-  databricks_access_connector = module.databricks_access_connector[0].databricks_access_connector
+  databricks_access_connector = module.databricks_access_connector.databricks_access_connector
   databricks_workspace        = module.databricks_workspace.databricks_workspace
   global_settings             = var.global_settings
   location                    = var.location
   metastore_name              = var.metastore_name
   metastore_owner             = var.metastore_owner
   resource_group              = module.resource_group_databricks_workspace.resource_group
-  storage_account             = module.storage_account_uc[0].storage_account
+  storage_account             = module.storage_account_uc.storage_account
 
   depends_on = [
     module.databricks_workspace,
