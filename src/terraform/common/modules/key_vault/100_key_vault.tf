@@ -10,12 +10,12 @@ resource "azurerm_key_vault" "this" {
   location                      = var.location
   resource_group_name           = var.resource_group.name
   enable_rbac_authorization     = true
-  public_network_access_enabled = var.enable_private_endpoints ? false : true
+  public_network_access_enabled = true
   sku_name                      = "standard"
   tenant_id                     = var.client_config.tenant_id
 
   network_acls {
-    bypass                     = "None"
+    bypass                     = "AzureServices"
     default_action             = var.enable_private_endpoints ? "Deny" : "Allow"
     ip_rules                   = var.enable_private_endpoints ? [] : distinct([var.agent_ip, replace(replace(var.client_ip.cidr, "/31", ""), "/32", "")])
     virtual_network_subnet_ids = var.virtual_network_subnet_ids

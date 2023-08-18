@@ -171,7 +171,7 @@ variable "private_dns_zones" {
 
 variable "private_endpoints_subresource_names" {
   type        = list(string)
-  default     = ["databricks_ui_api"]
+  default     = ["databricks_ui_api_be", "databricks_ui_api_fe"]
   description = "List of subresources for the private endpoints."
 }
 

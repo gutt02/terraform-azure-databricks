@@ -78,7 +78,7 @@ variable "metastore_owner" {
 
 variable "private_endpoints_subresource_names" {
   type        = list(string)
-  default     = ["browser_authentication", "databricks_ui_api"]
+  default     = ["browser_authentication", "databricks_ui_api_fe"]
   description = "List of subresources for the private endpoints."
 }
 
